@@ -56,10 +56,6 @@ public class User implements Serializable {
 	@Column(name = "Finger", columnDefinition="nvarchar(2)")
 	private String finger;
 	
-	@Column(columnDefinition="LONGBLOB")
-	@JsonIgnore
-	private String profile; 
-	
 	@Column(columnDefinition="nvarchar(50)")
 	private String fullname;
 	
@@ -76,18 +72,14 @@ public class User implements Serializable {
 	public User() {}
 	
 	public User(Integer id, @NotEmpty(message = "*Please provide your personal id") String personalId,
-			@NotEmpty(message = "*Please provide your first name") String fName,
-			@NotEmpty(message = "*Please provide your last name") String lname,
-			@Length(min = 5, message = "*Your password must have at least 5 characters") @NotEmpty(message = "*Please provide your password") String pass,
-			int active) {
+			String full_name, String finger,
+			@Length(min = 5, message = "*Your password must have at least 5 characters") @NotEmpty(message = "*Please provide your password") String pass) {
 		super();
 		this.id = id;
 		this.personalId = personalId;
-		this.FName = fName;
-		this.Lname = lname;
+		this.fullname = full_name;
 		this.pass = pass;
-		
-		this.active = active;
+		this.finger = finger;
 		
 	}
 
@@ -145,14 +137,6 @@ public class User implements Serializable {
 
 	public void setFinger(String finger) {
 		this.finger = finger;
-	}
-
-	public String getProfile() {
-		return profile;
-	}
-
-	public void setProfile(String profile) {
-		this.profile = profile;
 	}
 
 	public String getFullname() {

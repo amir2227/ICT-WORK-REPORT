@@ -23,14 +23,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import com.javasampleapproach.jqueryboostraptable.model.Report;
 import com.javasampleapproach.jqueryboostraptable.model.User;
-
+import com.javasampleapproach.jqueryboostraptable.repository.ReportRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.UserRepository;
 
 // @CrossOrigin(origins = "http://localhost:3000") this annotation for react.js
@@ -42,6 +40,9 @@ public class WebController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private ReportRepository rRepo;
 	
 	@Autowired
 	private UserService userService;
@@ -75,16 +76,7 @@ public class WebController {
 			model.addAttribute("user",user);
 		  return "userprofile";
 	  }
-	  @GetMapping("/adminprofile")
-	  public String aprofile(Model model,Integer id) {
-		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userService.findByUsername(auth.getName());
-			User u = userRepo.findById(id).get();
-			model.addAttribute("userName", "خوش آمدید   " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
-			model.addAttribute("user",u);
-			model.addAttribute("cuser",user);
-		  return "adminuserprofile";
-	  }
+	  
 	  @GetMapping("/access-denied")
 	   public String access(Model model){
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -105,27 +97,7 @@ public class WebController {
 			
 			return "redirect:/members";
 		}
-	  
-	  // this is used for user profile
-	  @PostMapping("/saveUser")
-		public String profile(User u, @RequestParam("file") MultipartFile file) {
-		  User user = userRepo.findById(u.getId()).get();
-		  System.out.println("User--------->"+user);
-		  if(u.getPass() != null) {
-			user.setPass(u.getPass());
-		  }
-		  if(u.getFullname() != null) {
-			  user.setFullname(u.getFullname());
-		  }
-		  if(!file.isEmpty()) {
-			  userService.savepro(user.getId(), file);
-		  }else {
-			  userRepo.save(user);
-		  }
- 
-			return "redirect:/profile";
-		}
-		
+	  		
 		@RequestMapping(value={ "/login"}, method = RequestMethod.GET)
 		public ModelAndView login(){
 		    ModelAndView modelAndView = new ModelAndView();
@@ -180,10 +152,24 @@ public class WebController {
 			return userRepo.findAll();
 		}
 	
+		@GetMapping("/findAllReports")
+		@ResponseBody
+		public List<Report> findAllReport() {
+			return rRepo.findAll();
+		}
 		
-
+		@GetMapping("/findOneReport")
+		@ResponseBody
+		public Optional<Report> findOneReport(Integer id) {
+			return rRepo.findById(id);
+		}
 	
-	
+		@GetMapping("/findReportByUser")
+		@ResponseBody
+		public List<Report> findReportByUser(String pid) {
+			List<User> user = userRepo.findBypersonalId(pid);
+			return rRepo.findByUsers(user);
+		}
 	
 	}
 

@@ -3,6 +3,8 @@ package com.javasampleapproach.jqueryboostraptable.model;
 
 
 
+import java.util.List;
+
 import javax.persistence.*;
 
 
@@ -25,8 +27,8 @@ public class Report {
     
     private String d_date;
 
-    @ManyToMany(mappedBy = "users")
-    private User user;
+    @ManyToMany(mappedBy = "reports")
+    private List<User> users;
     
 	public Report() {}
 
@@ -49,6 +51,17 @@ public class Report {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+
+
+	public List<User> getUser() {
+		return users;
+	}
+
+
+	public void setUser(List<User> user) {
+		this.users = user;
 	}
 
 

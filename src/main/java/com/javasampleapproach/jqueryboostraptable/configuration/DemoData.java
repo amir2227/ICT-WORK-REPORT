@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.javasampleapproach.jqueryboostraptable.model.Role;
 import com.javasampleapproach.jqueryboostraptable.repository.RoleRepository;
 
+
 @Component
 public class DemoData {
 
@@ -18,7 +19,8 @@ public class DemoData {
 	 @EventListener
 	    public void appReady(ApplicationReadyEvent event) {
 		 roleRepo.save(new Role(1L, "ADMIN"));
-		 roleRepo.save(new Role(2L, "USER"));
+		 roleRepo.save(new Role(2L, "USER")); 
+		 
 	    }
 	
 }
