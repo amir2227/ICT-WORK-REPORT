@@ -1,0 +1,174 @@
+
+<!DOCTYPE HTML>
+ 
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+      <title>IOT</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <script src="../js/jquery.min.js"></script>
+       <script src="../js/jquery.PrintArea.js"></script>
+       <script src="../js/get.js"></script>
+       <script src="../js/report.js"></script>
+	  <script src="../js/bootstrap.min.js"></script>
+	  <script type="text/javascript" th:src="@{../js/main.js}" src="../static/js/main.js"></script>
+	  <script type="text/javascript" th:src="@{../js/jqueryAjaxGet.js}" src="../static/js/jqueryAjaxGet.js"></script>
+	  
+      <link rel="stylesheet" href="../css/bootstrap.min.css" />
+</head>
+
+ <style>
+       body {
+	background-color: #001a33; 
+}
+#con {
+background-color: #FFFFFF;
+}
+      table th, table td {
+         padding: 5px;
+         direction: rtl;
+      }
+      .message {
+         color: blue;
+      }
+   </style>
+  <body dir="rtl">
+   <div class="container">
+    <th:block th:include="/_menu"></th:block>
+     </div>
+    <br><br>
+    <div class="container" id="con">
+      <!-- Include _menu.html -->
+     
+      <hr/>
+      <div class="row">
+			<div class="form-group col-sm-6" >
+    <input type="text" class="form-control tb" id="findbytajhiz" placeholder="پیدا کردن  تجهیزات"/>
+	</div>
+	<div class="form-group col-sm-6">
+    <input type="text" class="form-control tu" id="findbyuser" placeholder="پیدا کردن کاربرها" />
+    </div>
+    </div>
+	
+	
+	<div id="tableadded"></div>
+	
+		     <div class="qmyForm">
+	
+	<div class="modal fade" id="qexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+      
+      <div id="nu"></div>
+      <div id="ud"></div>
+		<table class="table table-hover">
+		<thead>
+		<tr>
+		<td>نام افراد درخواست دهنده</td>
+		<td>تاریخ دریافت</td>
+		<td>تاریخ تحویل به انبار</td>
+		
+		<td>توضیحات</td>
+		</tr>
+	</thead>
+	<tbody id="tajhizdarkhastuser"></tbody>
+ 
+        
+        </table>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary qprint" value="print" />
+      </div>
+    </div>
+  </div>
+  
+</div>
+	</div>
+	
+	     <div class="usmyForm">
+	
+	<div class="modal fade" id="usexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">گزارش</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+		<table class="table table-hover">
+		<thead>
+		<tr>
+		<td>نام تجهیزات استفاده شده</td>
+		<td>تعداد دفعات استفاده شده</td>
+		
+		</tr>
+		</thead>
+		<tbody id="userRepo"></tbody>
+        
+        </table>
+        <table class="table table-hover">
+		<thead>
+		<tr>
+		<td>آی دی فرم درخواست</td>
+		<td>تاریخ دریافت</td>
+		<td>تاریخ تحویل</td>
+		<td>تجهیزات استفاده شده</td>
+		<td>گزارش</td>
+		</tr>
+		</thead>
+		<tbody id="userRepomain"></tbody>
+        
+        </table>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary qprint" value="print" />
+      </div>
+    </div>
+  </div>
+  
+</div>
+	</div>
+	
+	
+<div class="modal fade" id="tdelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <p class="alert alert-danger">
+      Are you sure you want to delete this device
+      </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="" class="btn btn-danger" id="tdelRef">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+	
+	
+	</div> 
+	<script type="text/javascript">
+	
+	</script>
+   </body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+ 
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+      <title>IOT</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <script th:src="@{../../js/jquery.min.js}"></script>
+	  <script th:src="@{../../js/bootstrap.min.js}"></script>
+	  <link rel="stylesheet" type="text/css" th:href="@{../../css/bootstrap.min.css}" />
+	  <link rel="stylesheet" type="text/css" th:href="@{../../css/profile.css}" />
+	  <script type="text/javascript" th:src="@{../../js/main.js}" src="../static/js/main.js"></script>
+	  <script type="text/javascript" th:src="@{../../js/get.js}" src="../static/js/get.js"></script>
+	  <script type="text/javascript" th:src="@{../../js/jqueryAjaxGet.js}" src="../static/js/jqueryAjaxGet.js"></script>
+	  
+      
+</head>
+
+ <style>
+      table th, table td {
+         padding: 5px;
+         direction: rtl;
+      }
+      .message {
+         color: blue;
+      }
+      body {
+	background-color: #001a33; 
+		}
+	.btnde{
+		font-size: 22px;
+		background-color: #cbedf7; 
+		color: #000000;
+		}
+	.btnde:hover{
+		background-color: #3189a3;
+		color: #FFFFFF;
+		}
+   </style>
+   
+  <body dir="rtl" >
+    <div class="container">
+     <th:block th:include="/_menu"></th:block>
+    <div class="main-body">
+    
+          <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                  <th:block th:if="${user.profile} == null" >
+                    <img th:src="@{/images/avatar7.png}" alt="Admin" class="rounded-circle" width="150">
+                    </th:block>
+                     <th:block th:if="${user.profile} != null" >
+                     <img  width="100" th:src="*{'data:emza/jpg;base64,'+{user.profile}}" class="rounded-circle" style="direction: ltr;">ا
+                     </th:block>
+                    <div class="mt-3">
+                      <h4>[[${user.fullname}]]</h4>
+                      <p class="text-secondary mb-1">[[${user.job}]]</p>
+                      <p class="text-muted font-size-sm">[[${user.address}]]</p>
+                      <button id="profile" class="btn btn-primary">ویرایش پروفایل</button>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="card mt-3">
+                <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>لیست محدودیت دسترسی</h6>
+                
+                <hr>
+                <table  class="table table-hover">
+                <thead >
+                <tr dir="rtl"  style="font: bold; font-size: 19px;">
+                <td>نام تجهیزات</td>
+                <td>شماره اموال</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="taj : ${user.tajhizats}">
+                <td th:utext="${taj.name}"></td>
+                <td th:utext="${taj.amvalid}"></td>
+                <td>
+                <a th:href="@{../../deleteUserTajhiz/(tid=${taj.id},uid=${user.id})}" class="btn btn-danger" id="DeleteUserTajhiz">-</a>
+                </td>
+                </tr>
+                
+                </tbody>
+                </table>
+             
+                <th:block th:each="r : ${cuser.roles}">
+                       <th:block th:if="${r.name} == 'ADMIN'" >
+                      <a th:href="${user.id}"  class="btn btn-primary btnde" id="btnde">+</a>
+                      </th:block></th:block>
+                
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">[[${user.fullname}]]</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      نام و نام خانوادگی
+                    </div>
+                  </div>
+                  <hr>
+                 
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">[[${user.personalId}]]</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                       شماره پرسنلی
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0">[[${user.email}]]</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                       ایمیل
+                    </div>
+                  </div>
+                  <hr>
+                 
+          
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"> [[${user.mobile}]]</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      شماره مبایل
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"> [[${user.address}]]</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      آدرس
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row gutters-sm">
+                <div class="col-sm-6 mb-3">
+                  <div class="card h-100">
+                    <div class="card-body">
+                     <img  width="150px" th:src="*{'data:emza/jpg;base64,'+{user.emza}}" class="img-responsive" style="direction: ltr;">ا
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      تصویر امضا
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+        
+        
+              <div class="pmyForm">
+	<form th:action="@{/fa/saveUser}" method="post" enctype="multipart/form-data">
+	<div class="modal fade" id="pexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ویرایش پروفایل</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          
+          
+            <input type="hidden" class="form-control" id="id" name="id" th:value="${user.id}" hidden="true" />
+            <input type="hidden" class="form-control" id="finger" name="finger" th:value="${user.finger}" hidden="true" />
+          
+          
+          <div class="form-group col-sm-6">
+            <label for="email" class="form-control-label">ایمیل :</label>
+            <input type="email" class="form-control" id="email" name="email" value="" />
+          </div>
+          </div>
+          
+          <div class="row">
+          <div class="form-group col-sm-6">
+            <label for="fullname" class="form-control-label">نام و نام خانوادگی:</label>
+            <input type="text" class="form-control" id="fullname" name="fullname" value="" />
+          </div>
+          
+            <div class="form-group col-sm-6">
+            <label for="mobile" class="form-control-label">شماره مبایل:</label>
+            <input type="number" class="form-control" id="mobile" name="mobile" value="" />
+          </div>
+          </div>
+          <div class="row">
+          <div class="form-group col-sm-6">
+            <label for="address" class="form-control-label">آدرس:</label>
+            <input type="text" class="form-control" id="address" name="address" value="" />
+          </div>
+          
+           </div>
+           <div class="form-group">
+            <label for="pass" class="form-control-label"> رمز عبور جدید:</label>
+            <input type="password" class="form-control" id="pass" name="pass" value="" />
+          </div>
+           <div class="form-group">
+            <label for="file" class="form-control-label">تصویر پروفایل:</label>
+            <input type="file" class="custom-file-input" id="file" name="file"  />
+          </div>
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="save" />
+      </div>
+    </div>
+  </div>
+  	</form>
+</div>
+        
+      
+      
+      
+      
+       <div class="tamyForm">
+	<form th:action="@{/fa/addTajhiz}" method="post" >
+	<div class="modal fade" id="taexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">محدودیت دسترسی</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group col-sm-6">
+          
+            <input type="hidden" class="form-control" id="id2" name="id" th:value="${user.id}" hidden="true" />
+          </div>
+          <div id="wrapperfortestnames"></div>
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="save" />
+      </div>
+    </div>
+  </div>
+  </div>
+  	</form>
+</div>  
+    </div>
+      </body>
+      </html> 
+       
+       
