@@ -17,7 +17,7 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    private String title;
     
     private String is_complete;
     
@@ -27,16 +27,16 @@ public class Report {
     
     private String d_date;
 
-    @ManyToMany(mappedBy = "reports")
-    private List<User> users;
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Base base;
     
 	public Report() {}
 
 
-	public Report(Integer id, String name, String is_complete, String description, String d_time, String d_date) {
+	public Report(Integer id, String title, String is_complete, String description, String d_time, String d_date) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.title = title;
 		this.is_complete = is_complete;
 		this.description = description;
 		this.d_time = d_time;
@@ -54,24 +54,23 @@ public class Report {
 	}
 
 
-
-	public List<User> getUser() {
-		return users;
+	public Base getBase() {
+		return base;
 	}
 
 
-	public void setUser(List<User> user) {
-		this.users = user;
+	public void setBase(Base base) {
+		this.base = base;
 	}
 
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 
@@ -117,7 +116,7 @@ public class Report {
 
 	@Override
 	public String toString() {
-		return "Report [id=" + id + ", name=" + name + ", is_complete=" + is_complete + ", description=" + description
+		return "Report [id=" + id + ", title=" + title + ", is_complete=" + is_complete + ", description=" + description
 				+ ", d_time=" + d_time + ", d_date=" + d_date + "]";
 	}
 

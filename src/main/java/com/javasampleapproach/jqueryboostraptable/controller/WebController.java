@@ -26,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.javasampleapproach.jqueryboostraptable.model.Base;
 import com.javasampleapproach.jqueryboostraptable.model.Report;
 import com.javasampleapproach.jqueryboostraptable.model.User;
+import com.javasampleapproach.jqueryboostraptable.repository.BaseRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.ReportRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.UserRepository;
 
@@ -42,7 +44,7 @@ public class WebController {
 	private UserRepository userRepo;
 	
 	@Autowired
-	private ReportRepository rRepo;
+	private BaseRepository baseRepo;
 	
 	@Autowired
 	private UserService userService;
@@ -154,21 +156,21 @@ public class WebController {
 	
 		@GetMapping("/findAllReports")
 		@ResponseBody
-		public List<Report> findAllReport() {
-			return rRepo.findAll();
+		public List<Base> findAllReport() {
+			return baseRepo.findAll();
 		}
 		
 		@GetMapping("/findOneReport")
 		@ResponseBody
-		public Optional<Report> findOneReport(Integer id) {
-			return rRepo.findById(id);
+		public Optional<Base> findOneReport(Integer id) {
+			return baseRepo.findById(id);
 		}
 	
 		@GetMapping("/findReportByUser")
 		@ResponseBody
-		public List<Report> findReportByUser(String pid) {
-			List<User> user = userRepo.findBypersonalId(pid);
-			return rRepo.findByUsers(user);
+		public List<Base> findReportByUser(int id) {
+			Optional<User> user = userRepo.findById(id);
+			return baseRepo.findByUser(user.get());
 		}
 	
 	}

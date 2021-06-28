@@ -65,9 +65,8 @@ public class User implements Serializable {
 	private List<Role> roles;
 	
 	
-	@ManyToMany
-	@JsonIgnore
-	private List<Report> reports;
+	@OneToMany(mappedBy="user")
+	private List<Base> bases;
 	
 	public User() {}
 	
@@ -155,18 +154,19 @@ public class User implements Serializable {
 		this.roles = roles;
 	}
 
-	public List<Report> getReports() {
-		return reports;
+	public List<Base> getBases() {
+		return bases;
 	}
 
-	public void setReports(List<Report> reports) {
-		this.reports = reports;
+	public void setBases(List<Base> bases) {
+		this.bases = bases;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", personalId=" + personalId + ", finger=" + finger + ", fullname=" + fullname
-				+ ", roles=" + roles + ", reports=" + reports + "]";
+		return "User [id=" + id + ", personalId=" + personalId + ", FName=" + FName + ", Lname=" + Lname + ", active="
+				+ active + ", finger=" + finger + ", fullname=" + fullname + ", roles=" + roles + ", bases=" + bases
+				+ "]";
 	}
 
 
