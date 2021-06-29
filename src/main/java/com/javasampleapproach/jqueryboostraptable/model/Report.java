@@ -2,10 +2,9 @@ package com.javasampleapproach.jqueryboostraptable.model;
 
 
 
-
-import java.util.List;
-
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 
@@ -19,21 +18,24 @@ public class Report {
 
     private String title;
     
-    private String is_complete;
+    private Boolean is_complete;
     
     private String description;
     
     private String d_time;
     
     private String d_date;
+    
+    private String username;
 
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private Base base;
     
 	public Report() {}
 
 
-	public Report(Integer id, String title, String is_complete, String description, String d_time, String d_date) {
+	public Report(Integer id, String title, Boolean is_complete, String description, String d_time, String d_date) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -59,6 +61,16 @@ public class Report {
 	}
 
 
+	public String getUsername() {
+		return username;
+	}
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
 	public void setBase(Base base) {
 		this.base = base;
 	}
@@ -74,12 +86,12 @@ public class Report {
 	}
 
 
-	public String getIs_complete() {
+	public Boolean getIs_complete() {
 		return is_complete;
 	}
 
 
-	public void setIs_complete(String is_complete) {
+	public void setIs_complete(Boolean is_complete) {
 		this.is_complete = is_complete;
 	}
 

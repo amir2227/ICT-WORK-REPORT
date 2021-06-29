@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 
@@ -20,6 +22,7 @@ public class Base {
     private String d_date;
 
     @ManyToOne(fetch=FetchType.LAZY)
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy="base")

@@ -3,7 +3,7 @@
  
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-      <title>IOT</title>
+      <title>ICT Sarem</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <script th:src="@{../js/jquery.min.js}"></script>
@@ -32,6 +32,7 @@ background-color: #FFFFFF;
    </style>
    
   <body dir="rtl">
+  
  <div class="container">
     <th:block th:include="/_menu"></th:block>
      </div>
@@ -47,10 +48,9 @@ background-color: #FFFFFF;
             <tr style="font-size: 16px; font-family: cursive;">
                <td>Id</td>
                <td>شماره کارمندی</td>
-               <td>نام</td>
-               <td>نام خانوادگی</td>
-           		<td>شغل</td>
-               <td>تصویر امضا</td>
+               <td>نام و نام خانوادگی</td>
+               
+           		
                
             </tr>
             </thead>
@@ -59,16 +59,16 @@ background-color: #FFFFFF;
             <tr th:each ="member : ${members}">
             	<td th:utext="${member.id}">...</td>
                <td th:utext="${member.personalId}">...</td>
-               <td th:utext="${member.FName}">...</td>
-               <td th:utext="${member.Lname}">...</td>
-				<td th:utext="${member.job}">...</td>
-              <td width="40px"><img th:src="*{'data:emza/jpg;base64,'+{member.emza}}" class="img-responsive"></td>
+               <td th:utext="${member.fullname}">...</td>
+               
+				
+              
 				
 				<td>
 				<a th:href="@{findOneUser/(id=${member.id})}" class="btn btn-primary meBtn" id="EditUser">ویرایش</a>
 				<a th:href="@{deleteUser/(id=${member.id})}" class="btn btn-danger mdelBtn" id="DeleteUser">حذف</a>
 				
-				<a th:href="@{../fa/adminprofile/(id=${member.id})}" class="btn btn-primary proBtn" id="ProUser">پروفایل</a>
+				<a th:href="@{findReportByUser/(id=${member.id})}" class="btn btn-primary proBtn" id="RepoUser">گزارش کار</a>
 				</td>
 				
             </tr>
@@ -76,16 +76,9 @@ background-color: #FFFFFF;
             </tbody>
       </table>
       <hr/>
-	<!--		<ul class="nav nav-pills">
-			<li class="nav-item" th:each="i : ${#numbers.sequence(0,members.totalPages-1)}">
-			<a th:href="@{/members/(page=${i})}" th:text="${i}" class="nav-link" th:classappend="${currentPage}==${i}?'active':''"></a>
-			</li>
-			
-			</ul> -->
        
-      
            <div class="umyForm">
-	<form th:action="@{/saveeUser}" method="post" enctype="multipart/form-data">
+	<form th:action="@{/saveUser}" method="post" >
 	<div class="modal fade" id="uexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -120,19 +113,12 @@ background-color: #FFFFFF;
           </div>
           </div>
           <div class="row">
-          <div class="form-group col-sm-6">
-            <label for="job" class="form-control-label">شغل:</label>
-            <input type="text" class="form-control" id="job" name="job" value="" />
-          </div>
-          
            <div class="form-group col-sm-6">
             <label for="finger" class="form-control-label">نقش:</label>
             
             <select id="finger" class="form-control" name="finger" >
-    			<option  value="1">ADMIN</option>
+    			<option  value="0">ADMIN</option>
     			<option  value="2" >USER</option>
-    			<option  value="3" >MODIR</option>
-    			<option  value="4" >ANBARDAR</option>
 			</select>
           </div>
            </div>
@@ -140,10 +126,7 @@ background-color: #FFFFFF;
             <label for="pass" class="form-control-label">رمز عبور:</label>
             <input type="password" class="form-control" id="pass" name="pass" value="" />
           </div>
-           <div class="form-group">
-            <label for="file" class="form-control-label">تصویر امضا:</label>
-            <input type="file" class="custom-file-input" id="file" name="file"  />
-          </div>
+           
           </div>
         
       </div>
@@ -155,10 +138,59 @@ background-color: #FFFFFF;
   </div>
   	</form>
 </div>
-	
 
-	</div>
-           
-       
+
+           <div class="repmyForm">
+	
+	<div class="modal fade" id="repexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+      <div class="RUser" id="RUser"></div>
+
+
+
+	   </div>  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="save" />
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="udelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <p class="alert alert-danger">
+      Are you sure you want to delete this device
+      </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="" class="btn btn-danger" id="udelRef">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+	
+	</div>       
    </body>
 </html>
