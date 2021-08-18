@@ -1,8 +1,6 @@
 package com.javasampleapproach.jqueryboostraptable.repository;
 
 
-
-
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -19,6 +17,9 @@ import com.javasampleapproach.jqueryboostraptable.model.Report;
 @Transactional
 public interface ReportRepository extends JpaRepository<Report, Integer> {
 	
-	@Query(value = "SELECT * FROM gozaresh where d_date like %:keyword%",nativeQuery = true)
-	public List<Report> search(@Param("keyword") String keyword);
+	@Query(value = "SELECT * FROM gozaresh where d_date BETWEEN ?1 AND ?2",nativeQuery = true)
+	public List<Report> search(String keywordfrom,String keywordto);
+	
+	@Query(value = "SELECT * FROM gozaresh where state like %:state%",nativeQuery = true)
+	public List<Report> searchState(@Param("state") String state);
 }

@@ -2,10 +2,6 @@ package com.javasampleapproach.jqueryboostraptable.model;
 
 
 
-
-
-import org.hibernate.validator.constraints.Length;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -32,7 +28,6 @@ public class User implements Serializable {
 	@Column(name = "USER_ID")
 	private Integer id;
 	
-	@NotEmpty(message = "*Please provide your personal id")
 	@Column(name = "PERSONAL_ID", columnDefinition="nvarchar(10)")
 	private String personalId;
 	
@@ -44,8 +39,6 @@ public class User implements Serializable {
 
 	
 	@Column(name = "PASSWORD" )
-	@Length(min = 5, message = "*Your password must have at least 5 characters")
-	@NotEmpty(message = "*Please provide your password")
 	@JsonIgnore
 	private String pass;
 	
@@ -71,8 +64,7 @@ public class User implements Serializable {
 	public User() {}
 	
 	public User(Integer id, @NotEmpty(message = "*Please provide your personal id") String personalId,
-			String full_name, String finger,
-			@Length(min = 5, message = "*Your password must have at least 5 characters") @NotEmpty(message = "*Please provide your password") String pass) {
+			String full_name, String finger,String pass) {
 		super();
 		this.id = id;
 		this.personalId = personalId;

@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,10 +30,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.javasampleapproach.jqueryboostraptable.model.Base;
 import com.javasampleapproach.jqueryboostraptable.model.Report;
+import com.javasampleapproach.jqueryboostraptable.model.State;
 import com.javasampleapproach.jqueryboostraptable.model.User;
 import com.javasampleapproach.jqueryboostraptable.repository.BaseRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.ReportRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.Roozh;
+import com.javasampleapproach.jqueryboostraptable.repository.StateRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.UserRepository;
 
 // @CrossOrigin(origins = "http://localhost:3000") this annotation for react.js
@@ -55,6 +56,9 @@ public class WebController {
 	
 	@Autowired
 	private ReportRepository rRepo;
+	
+	@Autowired
+	private StateRepository sRepo;
 	
 	  @GetMapping("/")
 	  public String home() {
@@ -101,13 +105,13 @@ public class WebController {
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
 			Base base = baseRepo.findById(bid).get();
-			
-			
 			model.addAttribute("userName", "Welcome " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
 			model.addAttribute("reports",base.getReports());
 			model.addAttribute("date",base.getD_date());
 			model.addAttribute("baseId",base.getId());
-			
+			model.addAttribute("curentUser",user);
+			model.addAttribute("baseUser",base.getUser());
+			model.addAttribute("states",sRepo.findAll());
 	  return "ReportPage";
 	  }
 
@@ -123,7 +127,8 @@ public class WebController {
 			}else {
 				model.addAttribute("bases",baseRepo.findByUser(user));
 			}
-			System.out.println();
+			
+			model.addAttribute("states",sRepo.findAll());
 	  return "report";
 	  }
 
@@ -134,6 +139,17 @@ public class WebController {
 			model.addAttribute("userName", "خوش آمدید " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
 			model.addAttribute("user",user);
 		  return "userprofile";
+	  }
+	  @GetMapping("/states")
+	   public String viewState(Model model){
+	 		
+		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userService.findByUsername(auth.getName());
+			model.addAttribute("userName", "Welcome " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
+			model.addAttribute("states",sRepo.findAll());
+			
+			
+	  return "states";
 	  }
 	  
 	  @GetMapping("/access-denied")
@@ -156,7 +172,30 @@ public class WebController {
 			
 			return "redirect:/members";
 		}
-	  		
+	  @PostMapping("/saveUserPro")
+		public String savepro(User u) {
+		  System.out.println( "User profile ======="+u);
+		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userService.findByUsername(auth.getName()); 
+			 if(user.getRoles().get(0).getName().contentEquals("ADMIN")) {
+				 userService.save(u,0);
+			 }else {
+				 userService.save(u,1);
+			 }
+			
+			return "redirect:/profile";
+		}
+	  @PostMapping("/saveState")
+		public String savest(State s) { 
+				 sRepo.save(s);
+			return "redirect:/states";
+		}
+	  @GetMapping("/findOneState")
+	  @ResponseBody
+	  	public Optional<State> findOneState(Integer id){
+		  
+		  return sRepo.findById(id);
+	  }
 		@RequestMapping(value={ "/login"}, method = RequestMethod.GET)
 		public ModelAndView login(){
 		    ModelAndView modelAndView = new ModelAndView();
@@ -185,6 +224,7 @@ public class WebController {
 		    if (bindingResult.hasErrors()) {
 		        modelAndView.setViewName("registration");
 		    } else {	
+		    	user.setFinger("2");
 		    	 userService.save(user,1); // 1 means user Role is simple user and 0 means role is Admin
 		    }
 		    return modelAndView;
@@ -237,7 +277,18 @@ public class WebController {
 			Base b = new Base();
 			Roozh jCal = new Roozh();
 			jCal.gregorianToPersian(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
-			String cal = jCal.getYear()+"/"+jCal.getMonth()+"/"+jCal.getDay();
+			String day , month ="";
+			if(jCal.getMonth()<10) {
+				month = "0"+jCal.getMonth();
+			}else {
+				month =""+jCal.getMonth();
+			}
+			if(jCal.getDay()<10) {
+				day = "0"+jCal.getDay();
+			}else {
+				day =""+jCal.getDay();
+			}
+			String cal = jCal.getYear()+"/"+month+"/"+day;
 			b.setD_date(cal);
 			b.setUser(user);
 			for(Base base : bases) {
@@ -255,7 +306,18 @@ public class WebController {
 			Optional<Base> bases = baseRepo.findById(baseid);
 			Roozh jCal = new Roozh();
 			jCal.gregorianToPersian(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
-			String cal = jCal.getYear()+"/"+jCal.getMonth()+"/"+jCal.getDay();
+			String day , month ="";
+			if(jCal.getMonth()<10) {
+				month = "0"+jCal.getMonth();
+			}else {
+				month =""+jCal.getMonth();
+			}
+			if(jCal.getDay()<10) {
+				day = "0"+jCal.getDay();
+			}else {
+				day =""+jCal.getDay();
+			}
+			String cal = jCal.getYear()+"/"+month+"/"+day;
 			if(!bases.isPresent()) {
 				return "errorPage";
 			}
@@ -263,9 +325,10 @@ public class WebController {
 			if(!cal.contentEquals(base.getD_date())) {
 				return "errorPage";
 			}
+			String t = LocalTime.now().getHour()+":"+LocalTime.now().getMinute();
 			r.setBase(base);
 			r.setUsername(user.getFullname());
-			r.setD_time(LocalTime.now().toString());
+			r.setD_time(t);
 			r.setD_date(cal);
 			rRepo.save(r);
 			System.out.println("report ----->"+r);
@@ -305,8 +368,39 @@ public class WebController {
 		}
 		@GetMapping("/search/date")
 		@ResponseBody
-		public List<Report> searchDat(String keyword){
-			return rRepo.search(keyword);
+		public List<Report> searchDat(String from, String to){ 
+			
+			if(from.length() != 10) {
+			
+			if(from.charAt(6) == '/') { // modify month
+				from = from.substring(0,5)+"0"+from.substring(5);
+				
+			} 
+			if(from.length() !=10) { // modify day
+				from = from.substring(0,8)+"0"+from.substring(8);
+				
+			}
+			
+			}
+			if(to.length() != 10) {
+				
+				if(to.charAt(6) == '/') { // modify month
+					to = to.substring(0,5)+"0"+to.substring(5);
+					
+				} 
+				if(to.length() !=10) { // modify day
+					to = to.substring(0,8)+"0"+to.substring(8);
+					
+				}
+				
+				}
+			
+			return rRepo.search(from,to);
+		}
+		@GetMapping("/search/state")
+		@ResponseBody
+		public List<Report> searchState(String state){
+			return rRepo.searchState(state);
 		}
 		@GetMapping("/changestatus")
 		public String changeS(int id,int bid) {
@@ -318,6 +412,28 @@ public class WebController {
 			}
 			return "redirect:/ViewReports/?bid="+bid;
 		}
+		@GetMapping("/uncheckstatus")
+		public String change(int id,int bid) {
+			Optional<Report> rep = rRepo.findById(id);
+			if(rep.isPresent()) {
+				Report report = rep.get();
+				report.setIs_complete(null);
+				rRepo.save(report);
+			}
+			return "redirect:/ViewReports/?bid="+bid;
+		}
+		
+		@GetMapping("/deleteState")
+		public String del(int id) {
+			try {
+				sRepo.deleteById(id);
+				
+			} catch (Exception e) {
+				return "errorPage";
+			}
+			return "redirect:/states";
+		}
+		
 	}
 
 

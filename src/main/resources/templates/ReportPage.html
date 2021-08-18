@@ -7,6 +7,7 @@
       <script th:src="@{../js/jquery.min.js}"></script>
 	  <script th:src="@{../js/bootstrap.min.js}"></script>
 	  <link rel="stylesheet" type="text/css" th:href="@{../css/bootstrap.min.css}" />
+	  <link rel="stylesheet" type="text/css" th:href="@{../css/style.css}" />
 	  <script type="text/javascript" th:src="@{../js/main.js}" src="../static/js/main.js"></script>
 	  <script type="text/javascript" th:src="@{../js/get.js}" src="../static/js/get.js"></script>
 	  <script type="text/javascript" th:src="@{../js/jqueryAjaxGet.js}" src="../static/js/jqueryAjaxGet.js"></script>
@@ -33,14 +34,13 @@ background-color: #FFFFFF;
      </div>
     <br><br>
     <div class="container" id="con">      
-      <h2>گزارش [[${date}]]</h2>
-     	 <hr>
-     	 <h1>[[${per}]] </h1>
+      <h2>گزارش [[${date}]]</h2> <h4 dir="ltr">[[${baseUser.fullname}]] </h4>
      	 <hr>
       <table class="table table-hover">
       <thead>
-            <tr style="font-size: 16px; font-family: cursive;">
-               <td>Id</td>
+            <tr style="font-size: 16px;font-weight: bold;">
+              
+               <td>دسته بندی</td>
                <td>عنوان</td>
                <td>توضیحات</td>
                <td>ساعت</td>
@@ -50,16 +50,26 @@ background-color: #FFFFFF;
             <tbody>
             
             <tr th:each ="report : ${reports}">
-            	<td th:utext="${report.id}">...</td>
+            	
+            	<td th:utext="${report.state}">...</td>
                <td th:utext="${report.title}">...</td>
                <td th:utext="${report.description}">...</td>
                <td th:utext="${report.d_time}">...</td>
-               <td th:utext="${report.is_complete}">...</td>
-               <td><a th:href="@{../changestatus/(id=${report.id},bid=${baseId})}" class="btn btn-primary pBtn" id="R">انجام شد</a></td>
+               <th:block th:if="${report.is_complete}">
+               <td><span style="color: green; font-size: 30px">&#10003;</span></td>
+               </th:block>
+               <th:block th:if="${report.is_complete} == null">
+               <td><span style="color: red; font-size: 30px">&#10008;</span></td>
+               </th:block>
+			   <th:block th:if="${curentUser.personalId} == ${baseUser.personalId}">
+               <td><a th:href="@{../changestatus/(id=${report.id},bid=${baseId})}" class="btn btn-default" id="R"><span style="color: green; font-size: 30px">&#10003;</span>انجام شد</a></td>
+			   <td><a th:href="@{../uncheckstatus/(id=${report.id},bid=${baseId})}" class="btn btn-default" id="R2"><span style="color: red; font-size: 30px">&#10008;</span> انجام نشد</a></td>
+			   </th:block>
             </tr>
             
             </tbody>
       </table>
+      <th:block th:if="${curentUser.personalId} == ${baseUser.personalId}">
       <div dir="rtl">
       <form th:action="@{/saveRportToBase/(baseid=${baseId})}" method="post">
       
@@ -69,20 +79,26 @@ background-color: #FFFFFF;
           </div>
           <div class="form-group col-sm-3">
           <div class="form-check">
-          <input type="checkbox" id="is_complete" class="btn-check" name="is_complete"  >
+          <input type="checkbox" id="is_complete" class="btn-check" name="is_complete" >
           <label for="is_complete" class="btn btn-outline-primary"> انجام شد</label>
           </div>
           </div>
           <div class="form-group col-sm-3">
-          <input type="text" class="form-control" name="description" placeholder="توضیحات">
+          <textarea rows="4" cols="6" class="form-control" name="description" placeholder="توضیحات" required></textarea>
           </div>
           <div class="form-group col-sm-3">
-          <input type="text" class="form-control" name="title" placeholder="عنوان">
+          <input type="text" class="form-control" name="title" placeholder="عنوان" required>
           </div>
-          
+			<div class="form-group col-sm-3">
+          <select class="form-control" name="state">
+          <option th:each="state : ${states}" th:value="${state.name}" th:text="${state.name}"></option>
+          <option value="سایر">سایر</option>
+          </select>
+          </div>          
           </div>
       </form>
       </div>
+      </th:block>
       <hr/>
 
       

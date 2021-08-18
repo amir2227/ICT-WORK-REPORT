@@ -12,7 +12,7 @@
 	  <script type="text/javascript" th:src="@{../js/main.js}" src="../static/js/main.js"></script>
 	  <script type="text/javascript" th:src="@{../js/get.js}" src="../static/js/get.js"></script>
 	  <script type="text/javascript" th:src="@{../js/jqueryAjaxGet.js}" src="../static/js/jqueryAjaxGet.js"></script>
-	  
+	  <link rel="stylesheet" type="text/css" th:href="@{../css/style.css}" />
       
 </head>
 
@@ -45,10 +45,11 @@ background-color: #FFFFFF;
       	 
       <table   class="table table-hover">
       <thead>
-            <tr style="font-size: 16px; font-family: cursive;">
-               <td>Id</td>
-               <td>شماره کارمندی</td>
+            <tr style="font-size: 16px; font-weight: bold;">
+               
+               <td>نام كاربري</td>
                <td>نام و نام خانوادگی</td>
+			   <td>نقش</td>
                
            		
                
@@ -57,10 +58,9 @@ background-color: #FFFFFF;
             <tbody>
             
             <tr th:each ="member : ${members}">
-            	<td th:utext="${member.id}">...</td>
                <td th:utext="${member.personalId}">...</td>
                <td th:utext="${member.fullname}">...</td>
-               
+               <td th:utext="${member.roles[0].name}">...</td>
 				
               
 				
@@ -83,20 +83,27 @@ background-color: #FFFFFF;
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Update or Create</h5>
+        <h5 class="modal-title" id="exampleModalLabel">ويرايش يا ايجاد</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="form-group col-sm-6">
-            <label for="id" class="form-control-label">ID:</label>
-            <input type="text" class="form-control" id="id" name="id" value="" />
+          <div  hidden>
+            <label for="id" class="form-control-label" hidden>ID:</label>
+            <input type="text" class="form-control" id="id" name="id" value="" hidden />
           </div>
-          
           <div class="form-group col-sm-6">
-            <label for="personalId" class="form-control-label">شماره کارمندی:</label>
+            <label for="finger" class="form-control-label">نقش:</label>
+            
+            <select id="finger" class="form-control" name="finger" >
+    			<option  value="0">ADMIN</option>
+    			<option  value="2" >USER</option>
+			</select>
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="personalId" class="form-control-label">نام كاربري:</label>
             <input type="text" class="form-control" id="personalId" name="personalId" value="" />
           </div>
           </div>
@@ -113,20 +120,16 @@ background-color: #FFFFFF;
           </div>
           </div>
           <div class="row">
-           <div class="form-group col-sm-6">
-            <label for="finger" class="form-control-label">نقش:</label>
-            
-            <select id="finger" class="form-control" name="finger" >
-    			<option  value="0">ADMIN</option>
-    			<option  value="2" >USER</option>
-			</select>
-          </div>
+           
            </div>
            <div class="form-group">
             <label for="pass" class="form-control-label">رمز عبور:</label>
             <input type="password" class="form-control" id="pass" name="pass" value="" />
           </div>
-           
+           <div class="form-group">
+            <label for="pass2" class="form-control-label">تكرار رمز عبور:</label>
+            <input type="password" class="form-control" id="pass2" value="" />
+          </div>
           </div>
         
       </div>

@@ -1,7 +1,7 @@
 function myFunc(){
 		$('.table .qwBtn').on('click',function(){
 		var href = $(this).attr('id');
-		$.getJSON('http://localhost:8080/findAllReq/tajhiz/?id='+href,function(req){
+		$.getJSON('http://localhost/findAllReq/tajhiz/?id='+href,function(req){
 	 		var gencheckboxes = "";
 	 		var i=0;
 	 		var te = "";

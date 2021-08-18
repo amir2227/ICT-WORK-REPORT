@@ -3,18 +3,22 @@
  
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-      <title>IOT</title>
+      <title>ICT Sarem</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <script src="../js/jquery.min.js"></script>
        <script src="../js/jquery.PrintArea.js"></script>
        <script src="../js/get.js"></script>
        <script src="../js/report.js"></script>
+        <script src="../js/js-persian-cal.min.js"></script>
 	  <script src="../js/bootstrap.min.js"></script>
 	  <script type="text/javascript" th:src="@{../js/main.js}" src="../static/js/main.js"></script>
+	  <script src="../js/jquery.table2excel.js"></script>
+	  <script src="../js/jquery.table2excel.min.js"></script>
 	  <script type="text/javascript" th:src="@{../js/jqueryAjaxGet.js}" src="../static/js/jqueryAjaxGet.js"></script>
-	  
+	  <link rel="stylesheet" href="../css/js-persian-cal.css" />
       <link rel="stylesheet" href="../css/bootstrap.min.css" />
+	  <link rel="stylesheet" type="text/css" th:href="@{../css/style.css}" />
 </head>
 
  <style>
@@ -42,11 +46,22 @@ background-color: #FFFFFF;
      
       <hr/>
     <div class="row">
-			<div class="form-group col-sm-6" >
-    <input type="text" class="form-control tb" id="findbyDate" placeholder="پیدا کردن بر اساس تاریخ"/>
+			
+	<div class="form-group col-sm-1" >
+    <button class="btn btn-info ts" >جست و جو</button>
 	</div>
-	<div class="form-group col-sm-6">
-    <input type="text" class="form-control tu" id="findbyuser" placeholder="پیدا کردن کاربرها" />
+	<div class="form-group col-sm-3" >
+    <input type="text" class="form-control todate" id="pcal2" placeholder="تا تاريخ" /> 
+	</div>
+	<div class="form-group col-sm-3" >
+    <input type="text" class="form-control pdate" id="pcal1" placeholder="از تاريخ" /> 
+	</div>
+	<div class="form-group col-sm-3">
+	<select class="form-control tu" id="findbyState">
+			<option value=""></option>
+          <option th:each="state : ${states}" th:value="${state.name}" th:text="${state.name}"></option>
+          <option value="سایر">سایر</option>
+          </select>
     </div>
     </div>
 	
@@ -79,8 +94,54 @@ background-color: #FFFFFF;
 	
 	
 	</div> 
-	<script type="text/javascript">
-	
-	</script>
+	<script>
+	var objCal1 = new AMIB.persianCalendar( 'pcal1',
+		{ extraInputID: "extra", extraInputFormat: "YYYYMMDD" }
+	);
+ 
+		function fun(){
+			$('#tahvil').on('click',function(e){
+				e.preventDefault();
+		$('#pcal1').show(1000);
+			});
+			$('.zz').on('click',function(e){
+				e.preventDefault();
+				$('#pcal1').hide(1000);
+						
+			});
+		}
+var objCal2 = new AMIB.persianCalendar( 'pcal2',
+		{ extraInputID: "extra", extraInputFormat: "YYYYMMDD" }
+	);
+ 
+		function fun(){
+			$('#tahvil').on('click',function(e){
+				e.preventDefault();
+		$('#pcal2').show(1000);
+			});
+			$('.zz').on('click',function(e){
+				e.preventDefault();
+				$('#pcal2').hide(1000);
+						
+			});
+		}
+
+</script>
+<script>
+			
+				function ttoexcel(){
+					
+						$('.table').table2excel({
+							exclude: ".noExl",
+							name: "Excel Document Name",
+							filename: "Report" + new Date().toISOString().replace(/[\-\:\.]/g, "") + ".xls",
+							fileext: ".xls",
+							exclude_img: true,
+							exclude_links: true,
+							exclude_inputs: true
+						});
+					}
+			
+		</script>
    </body>
 </html>

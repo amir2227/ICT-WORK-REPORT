@@ -28,6 +28,8 @@ public class Report {
     
     private String username;
 
+    private String state; 
+
     @ManyToOne(fetch=FetchType.LAZY)
     @JsonIgnore
     private Base base;
@@ -66,10 +68,19 @@ public class Report {
 	}
 
 
+	public String getState() {
+		return state;
+	}
+
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
 
 	public void setBase(Base base) {
 		this.base = base;

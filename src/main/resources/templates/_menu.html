@@ -1,28 +1,20 @@
-<div xmlns:th="http://www.thymeleaf.org"
-     style="border: 3px solid #1369CA;  padding:10px; margin-bottom:20px;
-     background-color:#FFFFFF; border-bottom-right-radius: 7px; border-top-color: #FFFFFF; ">
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
-  <a th:href="@{/ViewBases}">گزارش های من</a>
+<div xmlns:th="http://www.thymeleaf.org">
  
-     | &nbsp;
  
-   <a th:href="@{/profile}">پروفایل</a>
  
-     | &nbsp;
- 
-   <a th:href="@{/members}">کاربرها</a>
-    | &nbsp;
- 
- 	<a th:href="@{/report}">گزارش</a>
- 
- <a >
- <span style="float: right; font-size: 90%;" th:utext="${userName}"></span>
-
-  <form th:action="@{/logout}" method="get">
-        <button style="float: left; width: 10%; border-color: #1369CA; background-color: #1369CA; font-size: 100%;" class="btn btn-md btn-danger btn-block" name="registration"
+ 	
+ <ul>
+  <li ><a th:href="@{/ViewBases}">گزارش های من</a></li>
+  <li><a th:href="@{/states}" >دسته بندی ها</a></li>
+  <li><a th:href="@{/profile}">پروفایل</a></li>
+  <li><a th:href="@{/members}">کاربرها</a></li>
+  <li><a th:href="@{/report}">گزارش</a></li>
+  <li style="float: left;"><span style="float: left; font-size: 90%;" th:utext="${userName}"></span></li>
+  <li><form th:action="@{/logout}" method="get">
+        <button  class="btn btn-md btn-danger btn-block" name="registration"
                 type="Submit">خروج
         </button>
-    </form>
-    
-    </a>
+    </form></li>
+</ul>
+	
 </div>

@@ -2,13 +2,14 @@
  
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-      <title>IOT</title>
+      <title>ICT Sarem</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <script th:src="@{../js/jquery.min.js}"></script>
 	  <script th:src="@{../js/bootstrap.min.js}"></script>
 	  <link rel="stylesheet" type="text/css" th:href="@{../css/bootstrap.min.css}" />
 	  <link rel="stylesheet" type="text/css" th:href="@{../css/profile.css}" />
+	  <link rel="stylesheet" type="text/css" th:href="@{../css/style.css}" />
 	  <script type="text/javascript" th:src="@{../js/main.js}" src="../static/js/main.js"></script>
 	  <script type="text/javascript" th:src="@{../js/get.js}" src="../static/js/get.js"></script>
 	  <script type="text/javascript" th:src="@{../js/jqueryAjaxGet.js}" src="../static/js/jqueryAjaxGet.js"></script>
@@ -32,7 +33,7 @@
   <body dir="rtl" >
     <div class="container">
      <th:block th:include="/_menu"></th:block>
-    <div class="main-body">
+    <div class="main-body" style="padding-top: 50px; margin-top:  50px;">
     
           <div class="row gutters-sm">
             <div class="col-md-4 mb-3">
@@ -80,7 +81,7 @@
                       <h6 class="mb-0">[[${user.personalId}]]</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                       شماره پرسنلی
+                       نام كاربري
                     </div>
                   </div>
                   <hr>
@@ -93,7 +94,7 @@
                 <div class="col-sm-6 mb-3">
                   <div class="card h-100">
                     <div class="card-body">
-             kjklj
+             ICT Sarem
                     </div>
                   </div>
                 </div>
@@ -114,7 +115,7 @@
         
         
               <div class="pmyForm">
-	<form th:action="@{/fa/saveUser}" method="post" enctype="multipart/form-data">
+	<form th:action="@{/saveUserPro}" method="post" >
 	<div class="modal fade" id="pexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -125,30 +126,35 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="row">
-         
           
-            <input type="hidden" class="form-control" id="id" name="id" th:value="${user.id}" hidden="true" />
-          <input type="hidden" class="form-control" id="finger" name="finger" th:value="${user.finger}" hidden="true" />
+           <input type="hidden"  id="id" name="id" th:value="${user.id}" hidden="true" />
+          <input type="hidden"  id="finger" name="finger" th:value="${user.finger}" hidden="true" />
+          <input type="hidden"  id="personalId" name="personalId" th:value="${user.personalId}" hidden="true" />
           
-         
-          </div>
           
           <div class="row">
-          <div class="form-group col-sm-6">
-            <label for="fullname" class="form-control-label">نام و نام خانوادگی:</label>
-            <input type="text" class="form-control" id="fullname" name="fullname" value="" />
-          </div>
           
-           <div class="form-group">
+          
+          <div class="form-group col-sm-6">
+            <label for="Lname" class="form-control-label"> نام خانوادگی:</label>
+            <input type="text" class="form-control" id="Lname" name="Lname" value="" />
+          </div>
+		  <div class="form-group col-sm-6">
+            <label for="FName" class="form-control-label">نام :</label>
+            <input type="text" class="form-control" id="FName" name="FName" value="" />
+          </div>
+          </div>
+		  <div class="row">
+          
+           <div class="form-group col-sm-6">
+            <label for="pass" class="form-control-label"> تكرار رمز عبور:</label>
+            <input type="password" class="form-control" id="pass2"  value="" />
+          </div>
+		  <div class="form-group col-sm-6">
             <label for="pass" class="form-control-label"> رمز عبور جدید:</label>
             <input type="password" class="form-control" id="pass" name="pass" value="" />
           </div>
           </div>
-          
-          
-          
-           
           </div>
         
       </div>
