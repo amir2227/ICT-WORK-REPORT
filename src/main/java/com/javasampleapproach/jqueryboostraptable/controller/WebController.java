@@ -111,6 +111,7 @@ public class WebController {
 			model.addAttribute("baseId",base.getId());
 			model.addAttribute("curentUser",user);
 			model.addAttribute("baseUser",base.getUser());
+			model.addAttribute("allUser",userRepo.findAll());
 			model.addAttribute("states",sRepo.findAll());
 	  return "ReportPage";
 	  }
@@ -327,9 +328,9 @@ public class WebController {
 			}
 			String t = LocalTime.now().getHour()+":"+LocalTime.now().getMinute();
 			r.setBase(base);
-			r.setUsername(user.getFullname());
 			r.setD_time(t);
 			r.setD_date(cal);
+		
 			rRepo.save(r);
 			System.out.println("report ----->"+r);
 			Boolean b = base.getReports().add(r);

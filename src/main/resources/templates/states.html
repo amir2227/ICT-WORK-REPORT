@@ -39,14 +39,14 @@ background-color: #FFFFFF;
      </div>
     <br><br>
     <div class="container" id="con">      
-      <h2>دسته بندی ها</h2>
-       <button class="btn btn-succes stnBtn" id="NState">اضافه کردن دسته بندی جدید</button>
+      <h2>بخش ها</h2>
+       <button class="btn btn-succes stnBtn" id="NState">اضافه کردن بخش جدید</button>
       	 
       <table   class="table table-hover">
       <thead>
             <tr style="font-size: 16px; font-weight: bold;">
                
-               <td>نام دسته بندی</td>
+               <td>نام بخش</td>
             </tr>
             </thead>
             <tbody>
@@ -72,22 +72,23 @@ background-color: #FFFFFF;
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Update or Create</h5>
+        <h5 class="modal-title" id="exampleModalLabel">ویرایش یا ایجاد</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="row">
-          
-          
           <div class="form-group col-sm-6">
-            <label for="name" class="form-control-label">نام دسته بندی:</label>
-            <input type="text" class="form-control" id="name" name="name" value="" />
-          </div>
 		  <div  hidden>
             <label for="id" class="form-control-label">ID:</label>
             <input type="text" class="form-control" id="id" name="id" value="" />
+          </div>
+          </div>
+          
+          <div class="form-group col-sm-6">
+            <label for="name" class="form-control-label">نام بخش:</label>
+            <input type="text" class="form-control" id="name" name="name" value="" />
           </div>
           </div>
            
@@ -95,8 +96,8 @@ background-color: #FFFFFF;
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <input type="submit" class="btn btn-primary" value="save" />
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">بیخیال</button>
+        <input type="submit" class="btn btn-primary" value="ذخیره" />
       </div>
     </div>
   </div>
@@ -110,19 +111,19 @@ background-color: #FFFFFF;
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">حذف</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
       <p class="alert alert-danger">
-      Are you sure you want to delete this state
+      	آیا از حذف کردن این رکورد مطمئن هستید؟
       </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <a href="" class="btn btn-danger" id="stdelRef">Delete</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">بیخیال</button>
+        <a href="" class="btn btn-danger" id="stdelRef">حذف</a>
       </div>
     </div>
   </div>

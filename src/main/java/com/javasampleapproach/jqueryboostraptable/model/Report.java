@@ -14,9 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    private String title;
+    private Integer id;  
     
     private Boolean is_complete;
     
@@ -26,9 +24,15 @@ public class Report {
     
     private String d_date;
     
-    private String username;
+    private String username; //peygiri konande
 
-    private String state; 
+    private String state; //bakhsh
+    
+    private String client; // morjee konandeh
+    
+    private String type; // noe morajee
+    
+    
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JsonIgnore
@@ -40,7 +44,6 @@ public class Report {
 	public Report(Integer id, String title, Boolean is_complete, String description, String d_time, String d_date) {
 		super();
 		this.id = id;
-		this.title = title;
 		this.is_complete = is_complete;
 		this.description = description;
 		this.d_time = d_time;
@@ -60,6 +63,26 @@ public class Report {
 
 	public Base getBase() {
 		return base;
+	}
+
+
+	public String getClient() {
+		return client;
+	}
+
+
+	public void setClient(String client) {
+		this.client = client;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 
@@ -87,14 +110,6 @@ public class Report {
 	}
 
 
-	public String getTitle() {
-		return title;
-	}
-
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
 
 
 	public Boolean getIs_complete() {
@@ -139,9 +154,13 @@ public class Report {
 
 	@Override
 	public String toString() {
-		return "Report [id=" + id + ", title=" + title + ", is_complete=" + is_complete + ", description=" + description
-				+ ", d_time=" + d_time + ", d_date=" + d_date + "]";
+		return "Report [id=" + id + ", is_complete=" + is_complete + ", description=" + description + ", d_time="
+				+ d_time + ", d_date=" + d_date + ", username=" + username + ", state=" + state + ", client=" + client
+				+ ", type=" + type + "]";
 	}
+
+
+
 
     
 
