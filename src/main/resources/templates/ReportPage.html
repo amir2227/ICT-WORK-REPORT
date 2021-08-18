@@ -41,6 +41,7 @@ background-color: #FFFFFF;
             <tr style="font-size: 16px;font-weight: bold;">
               <td>ردیف</td>
                <td>مراجعه کننده</td>
+               <td>دسته بندی</td>
                <td>بخش</td>
                <td>نوع مراجعه</td>
                <td>پیگیری کننده</td>
@@ -55,20 +56,24 @@ background-color: #FFFFFF;
             	<td th:utext="${s.count}">...</td>
             	<td th:utext="${report.client}">...</td>
             	<td th:utext="${report.state}">...</td>
+            	<td th:utext="${report.location}">...</td>
                <td th:utext="${report.type}">...</td>
                <td th:utext="${report.username}">...</td>
-               <td th:utext="${report.description}">...</td>
+               <td th:utext="${report.description}" width="120px">...</td>
                
                <th:block th:if="${report.is_complete}">
-               <td><span style="color: green; font-size: 30px">&#10003;</span></td>
+               <td><a th:href="@{../uncheckstatus/(id=${report.id},bid=${baseId})}"><span style="color: green; font-size: 30px">&#10003;</span></a></td>
                </th:block>
                <th:block th:if="${report.is_complete} == null">
-               <td><span style="color: red; font-size: 30px">&#10008;</span></td>
+               <td><a th:href="@{../changestatus/(id=${report.id},bid=${baseId})}"><span style="color: red; font-size: 30px">&#10008;</span></a></td>
                </th:block>
                <td th:utext="${report.d_time}">...</td>
 			   <th:block th:if="${curentUser.personalId} == ${baseUser.personalId}">
-               <td><a th:href="@{../changestatus/(id=${report.id},bid=${baseId})}" class="btn btn-default" id="R"><span style="color: green; font-size: 30px">&#10003;</span>انجام شد</a></td>
-			   <td><a th:href="@{../uncheckstatus/(id=${report.id},bid=${baseId})}" class="btn btn-default" id="R2"><span style="color: red; font-size: 30px">&#10008;</span> انجام نشد</a></td>
+               
+			   <td>
+			    <a th:href="@{../findOneRep/(id=${report.id})}" class="btn btn-primary rBtn" id="EditRep">ویرایش</a>
+				<a th:href="@{../deleteReport/(id=${report.id},bid=${baseId})}" class="btn btn-danger rdelBtn" id="DeleteRep">حذف</a>
+				</td>
 			   </th:block>
             </tr>
             
@@ -111,6 +116,9 @@ background-color: #FFFFFF;
           <option th:each="state : ${states}" th:value="${state.name}" th:text="${state.name}"></option>
           <option value="سایر">سایر</option>
           </select>
+          </div>
+          <div class="form-group col-sm-3">
+          <input type="text" class="form-control" name="location" placeholder="بخش" required>
           </div>          
           </div>
       </form>
@@ -118,9 +126,100 @@ background-color: #FFFFFF;
       </th:block>
       <hr/>
 
-      
-      	</div>
+
+           <div class="rForm">
+	<form th:action="@{/editRport/(baseid=${baseId})}" method="post" >
+	<div class="modal fade" id="rexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ویرایش </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group col-sm-6">
+		  <div  hidden>
+            <label for="id" class="form-control-label">ID:</label>
+            <input type="text" class="form-control" id="id" name="id" value="" />
+          </div>
+          <input type="text" class="form-control" name="location" id="location" placeholder="بخش" required>
+          </div>
+          
+          <div class="form-group col-sm-6">
+            <select class="form-control" name="state" id="state">
+          <option th:each="state : ${states}" th:value="${state.name}" th:text="${state.name}"></option>
+          <option value="سایر">سایر</option>
+          </select>
+          </div>
+          
+          </div>
+           <div class="row">
+          	<div class="form-group col-sm-6">
+          <select class="form-control" name="type">
+          <option value="تلفنی">تلفنی</option>
+          <option value="حضوری">حضوری</option>
+          </select>
+          </div>
+          <div class="form-group col-sm-6">
+          <select class="form-control" name="username">
+          <option th:each="us : ${allUser}" th:value="${us.fullname}" th:text="${us.fullname}"></option>
+          <option value="سایر">سایر</option>
+          </select>
+          </div> 
            
-       
+           </div>
+           <div class="row">
+          <div class="form-group col-sm-6">
+          <textarea rows="4" cols="6" class="form-control" id="description" name="description" placeholder="توضیحات" required></textarea>
+          </div>
+          <div class="form-group col-sm-6">
+          <input type="text" class="form-control" name="client" placeholder="مراجعه کننده" id="client" required>
+          </div> 
+           
+           
+           </div>
+           
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">بیخیال</button>
+        <input type="submit" class="btn btn-primary" value="ذخیره" />
+      </div>
+    </div>
+  </div>
+  	</form>
+</div>
+
+
+           
+
+<div class="modal fade" id="rdelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">هشدار</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <p class="alert alert-danger">
+      	آیا از حذف کردن این رکورد مطمئن هستید؟
+      </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">بیخیال</button>
+        <a href="" class="btn btn-danger" id="rdelRef">حذف</a>
+      </div>
+    </div>
+  </div>
+</div>
+	
+      
+ </div>
 </body>
 </html>

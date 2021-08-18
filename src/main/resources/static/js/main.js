@@ -4,7 +4,7 @@
 
 $(document).ready(function(){
 	
-	$('.mnBtn, .table .meBtn, .table .proBtn, .stnBtn, .table .stBtn').on('click',function(event){
+	$('.mnBtn, .table .meBtn, .table .proBtn, .stnBtn, .table .stBtn, .table .rBtn').on('click',function(event){
 		event.preventDefault();
 		var href = $(this).attr('href');
 		var text = $(this).attr('id');
@@ -28,7 +28,17 @@ $(document).ready(function(){
 				});
 				
 			$('.smyForm #sexampleModal').modal();
-			 }else if(text=='NUser'){
+			 }else if(text=='EditRep'){ 
+					
+					$.get(href,function(rep,status){
+						$('.rForm #id').val(rep.id);
+						$('.rForm #location').val(rep.location);
+						$('.rForm #description').val(rep.description);
+						$('.rForm #client').val(rep.client);
+					});
+					
+				$('.rForm #rexampleModal').modal();
+				 }else if(text=='NUser'){
 			$('.umyForm #id').val('');
 			$('.umyForm #personalId').val('');
 			$('.umyForm #FName').val('');
@@ -54,13 +64,16 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('.table .mdelBtn').on('click',function(event){
+	$('.table .mdelBtn,.table .rdelBtn').on('click',function(event){
 		event.preventDefault();
 		var href = $(this).attr('href');
 		var text = $(this).attr('id');
 		if(text == 'DeleteUser'){
 			$('#udelModal #udelRef').attr('href' ,href);
 			$('#udelModal').modal();
+		}else if(text == 'DeleteRep'){
+			$('#rdelModal #rdelRef').attr('href' ,href);
+			$('#rdelModal').modal();
 		}
 		
 	});   

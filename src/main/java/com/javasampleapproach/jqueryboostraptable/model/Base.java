@@ -25,7 +25,7 @@ public class Base {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy="base")
+    @OneToMany(mappedBy="base",cascade=CascadeType.ALL)
 	private List<Report> reports;
     
 	public Base() {}

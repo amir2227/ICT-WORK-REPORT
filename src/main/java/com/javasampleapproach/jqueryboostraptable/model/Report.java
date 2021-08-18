@@ -26,7 +26,9 @@ public class Report {
     
     private String username; //peygiri konande
 
-    private String state; //bakhsh
+    private String location; //bakhsh
+    
+    private String state; 
     
     private String client; // morjee konandeh
     
@@ -63,6 +65,16 @@ public class Report {
 
 	public Base getBase() {
 		return base;
+	}
+
+
+	public String getLocation() {
+		return location;
+	}
+
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 

@@ -117,19 +117,62 @@ public class WebController {
 	  }
 
 	  @GetMapping("/report")
-	   public String Reports(Model model){
-	 		
+	   public String Reports(Model model,String keyword,String from,String to){
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
-			model.addAttribute("userName", "Welcome " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
-			
-			if(user.getRoles().get(0).getName().contentEquals("ADMIN")) {
-				model.addAttribute("bases",baseRepo.findAll());
+			model.addAttribute("userName", user.getFullname() + " (" + user.getPersonalId() + ")");
+			if(keyword==null && from==null && to==null) {
+				model.addAttribute("reports",rRepo.findAll());
 			}else {
-				model.addAttribute("bases",baseRepo.findByUser(user));
+			if(keyword != "") {
+				if(from !="" && to != "") {
+					if(from.length() != 10) {
+						if(from.charAt(6) == '/') { // modify month
+							from = from.substring(0,5)+"0"+from.substring(5);
+						} 
+						if(from.length() !=10) { // modify day
+							from = from.substring(0,8)+"0"+from.substring(8);	
+						}
+						}
+						if(to.length() != 10) {
+							if(to.charAt(6) == '/') { // modify month
+								to = to.substring(0,5)+"0"+to.substring(5);
+							} 
+							if(to.length() !=10) { // modify day
+								to = to.substring(0,8)+"0"+to.substring(8);			
+							}
+							}
+					
+				model.addAttribute("reports",rRepo.searchMulti(from, to, keyword));
+				}else {
+	 			model.addAttribute("reports",rRepo.searchState(keyword));
+	 			
+				}
+	 		}else {
+	 			if(from !="" && to != "") {
+	 				if(from.length() != 10) {
+						if(from.charAt(6) == '/') { // modify month
+							from = from.substring(0,5)+"0"+from.substring(5);
+						} 
+						if(from.length() !=10) { // modify day
+							from = from.substring(0,8)+"0"+from.substring(8);	
+						}
+						}
+						if(to.length() != 10) {
+							if(to.charAt(6) == '/') { // modify month
+								to = to.substring(0,5)+"0"+to.substring(5);
+							} 
+							if(to.length() !=10) { // modify day
+								to = to.substring(0,8)+"0"+to.substring(8);			
+							}
+							}
+					
+	 				model.addAttribute("reports",rRepo.search(from, to));
+	 			}else {
+	 			model.addAttribute("reports",rRepo.findAll());
+	 			}
+	 		}
 			}
-			
-			model.addAttribute("states",sRepo.findAll());
 	  return "report";
 	  }
 
@@ -263,7 +306,12 @@ public class WebController {
 		public Optional<Base> findOneReport(Integer id) {
 			return baseRepo.findById(id);
 		}
-	
+		@GetMapping("/findOneRep")
+		@ResponseBody
+		public Optional<Report> findOnesub(Integer id) {
+			return rRepo.findById(id);
+		}
+		
 		@GetMapping("/findReportByUser")
 		@ResponseBody
 		public List<Base> findReportByUser(int id) {
@@ -302,8 +350,6 @@ public class WebController {
 		}
 		@PostMapping("/saveRportToBase")
 		public String saveToBase(Report r,int baseid) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userService.findByUsername(auth.getName());
 			Optional<Base> bases = baseRepo.findById(baseid);
 			Roozh jCal = new Roozh();
 			jCal.gregorianToPersian(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
@@ -342,6 +388,20 @@ public class WebController {
 			baseRepo.save(base);
 			return "redirect:/ViewReports/?bid="+baseid;
 		}
+		@PostMapping("/editRport")
+		public String editToBase(Report r,int baseid) {
+			Report rp = rRepo.findById(r.getId()).get();
+			rp.setClient(r.getClient());
+			rp.setDescription(r.getDescription());
+			rp.setIs_complete(r.getIs_complete());
+			rp.setLocation(r.getLocation());
+			rp.setState(r.getState());
+			rp.setType(r.getType());
+			rp.setUsername(r.getUsername());
+			rRepo.save(rp);
+			return "redirect:/ViewReports/?bid="+baseid;
+		}
+		
 		@GetMapping("/search/dateAndUser")
 		@ResponseBody
 		public List<Base> searchDate(String keyword,int uid){
@@ -434,7 +494,16 @@ public class WebController {
 			}
 			return "redirect:/states";
 		}
-		
+		@GetMapping("/deleteReport")
+		public String delr(int id,int bid) {
+			try {
+				rRepo.deleteById(id);
+				
+			} catch (Exception e) {
+				return "errorPage";
+			}
+			return "redirect:/ViewReports/?bid="+bid;
+		}
 	}
 
 
