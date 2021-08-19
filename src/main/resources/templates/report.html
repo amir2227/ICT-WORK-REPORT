@@ -43,33 +43,80 @@ background-color: #FFFFFF;
     <br><br>
     <div class="container" id="con">
       <!-- Include _menu.html -->
-     
+     <div class="row">
+     	<div class="form-group col-sm-4" >
+     	تعداد کل گزارشات  :   [[${total}]]
+     	</div>
+     	<div class="form-group col-sm-4" >
+     	تعداد انجام شده ها    :  [[${right}]]
+     	</div>
+     	<div class="form-group col-sm-4" >
+     	تعداد انجام نشده ها   :  [[${bad}]]
+     	</div>
+    </div>
       <hr/>
-      <form action=""></form>
+      <form action="/report" method="get">
     <div class="row">
 			
-	<div class="form-group col-sm-1" >
-    <button class="btn btn-info ts" >جست و جو</button>
+	<div class="form-group col-sm-3" >
+    <input type="submit" class="btn btn-info" value="جست و جو" >
 	</div>
 	<div class="form-group col-sm-3" >
-    <input type="text" class="form-control todate" id="pcal2" placeholder="تا تاريخ" /> 
+    <input type="text" class="form-control" name="to" id="pcal2" placeholder="تا تاريخ" /> 
 	</div>
 	<div class="form-group col-sm-3" >
-    <input type="text" class="form-control pdate" id="pcal1" placeholder="از تاريخ" /> 
+    <input type="text" class="form-control" name="from" id="pcal1" placeholder="از تاريخ" /> 
 	</div>
 	<div class="form-group col-sm-3">
-	<select class="form-control tu" id="findbyState">
+	<select class="form-control" id="findbyState" name="keyword">
 			<option value=""></option>
           <option th:each="state : ${states}" th:value="${state.name}" th:text="${state.name}"></option>
           <option value="سایر">سایر</option>
           </select>
     </div>
     </div>
+	</form>
 	
+	<table class="table table-hover">
+      <thead>
+            <tr style="font-size: 16px;font-weight: bold;">
+              <td>ردیف</td>
+               <td>مراجعه کننده</td>
+               <td>دسته بندی</td>
+               <td>بخش</td>
+               <td>نوع مراجعه</td>
+               <td>پیگیری کننده</td>
+               <td>توضیحات</td>
+               <td>نتیجه</td>
+               <td>تاریخ</td>
+               <td>ساعت</td>
+            </tr>
+            </thead>
+            <tbody>
+            
+            <tr th:each ="report,s : ${reports}">
+            	<td th:utext="${s.count}">...</td>
+            	<td th:utext="${report.client}">...</td>
+            	<td th:utext="${report.state}">...</td>
+            	<td th:utext="${report.location}">...</td>
+               <td th:utext="${report.type}">...</td>
+               <td th:utext="${report.username}">...</td>
+               <td th:utext="${report.description}" width="120px">...</td>
+               
+               <th:block th:if="${report.is_complete}">
+               <td><span style="color: green; font-size: 30px">&#10003;</span></td>
+               </th:block>
+               <th:block th:if="${report.is_complete} == null">
+               <td><span style="color: red; font-size: 30px">&#10008;</span></td>
+               </th:block>
+               <td th:utext="${report.d_date}">...</td>
+			   <td th:utext="${report.d_time}">...</td>
+            </tr>
+            
+            </tbody>
+      </table>
 	
-	<div id="tableadded"></div>
-	
-	
+			<button onclick="ttoexcel()" class="btn btn-info">Export to XLS</button>
 
 	
 	

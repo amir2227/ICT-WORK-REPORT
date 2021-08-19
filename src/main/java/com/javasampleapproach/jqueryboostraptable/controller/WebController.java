@@ -121,8 +121,18 @@ public class WebController {
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
 			model.addAttribute("userName", user.getFullname() + " (" + user.getPersonalId() + ")");
+			int bad = 0;
 			if(keyword==null && from==null && to==null) {
-				model.addAttribute("reports",rRepo.findAll());
+				List<Report> rp = rRepo.findAll();
+				model.addAttribute("reports",rp);
+				model.addAttribute("total",rp.size());
+				for(Report r : rp) {
+					if(r.getIs_complete() == null) {
+						bad++;
+					}
+				}
+				model.addAttribute("bad",bad);
+				model.addAttribute("right",rp.size() - bad);
 			}else {
 			if(keyword != "") {
 				if(from !="" && to != "") {
@@ -142,11 +152,27 @@ public class WebController {
 								to = to.substring(0,8)+"0"+to.substring(8);			
 							}
 							}
-					
-				model.addAttribute("reports",rRepo.searchMulti(from, to, keyword));
+				List<Report> mrp = 	rRepo.searchMulti(from, to, keyword);
+				model.addAttribute("reports",mrp);
+				model.addAttribute("total",mrp.size());
+				for(Report r : mrp) {
+					if(r.getIs_complete() == null) {
+						bad++;
+					}
+				}
+				model.addAttribute("bad",bad);
+				model.addAttribute("right",mrp.size() - bad);
 				}else {
-	 			model.addAttribute("reports",rRepo.searchState(keyword));
-	 			
+					List<Report> mrp = 	rRepo.searchState(keyword);
+					model.addAttribute("reports",mrp);
+					model.addAttribute("total",mrp.size());
+					for(Report r : mrp) {
+						if(r.getIs_complete() == null) {
+							bad++;
+						}
+					}
+					model.addAttribute("bad",bad);
+					model.addAttribute("right",mrp.size() - bad);
 				}
 	 		}else {
 	 			if(from !="" && to != "") {
@@ -166,10 +192,28 @@ public class WebController {
 								to = to.substring(0,8)+"0"+to.substring(8);			
 							}
 							}
-					
-	 				model.addAttribute("reports",rRepo.search(from, to));
+					List<Report> mrp = rRepo.search(from, to);
+					model.addAttribute("reports",mrp);
+					model.addAttribute("total",mrp.size());
+					for(Report r : mrp) {
+						if(r.getIs_complete() == null) {
+							bad++;
+						}
+					}
+					model.addAttribute("bad",bad);
+					model.addAttribute("right",mrp.size() - bad);
+	 				
 	 			}else {
-	 			model.addAttribute("reports",rRepo.findAll());
+	 			List<Report> mrp = rRepo.findAll();
+	 			model.addAttribute("reports",mrp);
+				model.addAttribute("total",mrp.size());
+				for(Report r : mrp) {
+					if(r.getIs_complete() == null) {
+						bad++;
+					}
+				}
+				model.addAttribute("bad",bad);
+				model.addAttribute("right",mrp.size() - bad);
 	 			}
 	 		}
 			}
