@@ -34,7 +34,7 @@ public class Report {
     
     private String type; // noe morajee
     
-    
+    private String user_job;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JsonIgnore
@@ -60,6 +60,16 @@ public class Report {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+
+	public String getUser_job() {
+		return user_job;
+	}
+
+
+	public void setUser_job(String user_job) {
+		this.user_job = user_job;
 	}
 
 

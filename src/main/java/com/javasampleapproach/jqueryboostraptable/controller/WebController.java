@@ -9,8 +9,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.javasampleapproach.jqueryboostraptable.model.Base;
+import com.javasampleapproach.jqueryboostraptable.model.Jobs;
 import com.javasampleapproach.jqueryboostraptable.model.Report;
 import com.javasampleapproach.jqueryboostraptable.model.State;
 import com.javasampleapproach.jqueryboostraptable.model.User;
 import com.javasampleapproach.jqueryboostraptable.repository.BaseRepository;
+import com.javasampleapproach.jqueryboostraptable.repository.JobRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.ReportRepository;
 import com.javasampleapproach.jqueryboostraptable.repository.Roozh;
 import com.javasampleapproach.jqueryboostraptable.repository.StateRepository;
@@ -42,8 +42,6 @@ import com.javasampleapproach.jqueryboostraptable.repository.UserRepository;
 @Service
 @Controller
 public class WebController {
-	
-
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -60,9 +58,12 @@ public class WebController {
 	@Autowired
 	private StateRepository sRepo;
 	
+	@Autowired
+	private JobRepository jRepo;
+	
 	  @GetMapping("/")
 	  public String home() {
-		  return "Welcome";
+		  return "redirect:/ViewBases";
 	  }
 	  @GetMapping("/members")
 	   public String viewMembers(Model model,String keyword){
@@ -88,7 +89,7 @@ public class WebController {
 	 		//data have devices information
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
-			model.addAttribute("userName", "Welcome " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
+			model.addAttribute("userName", user.getFullname() + " (" + user.getPersonalId() + ")");
 			
 			if(user.getRoles().get(0).getName().contentEquals("ADMIN")) {
 				model.addAttribute("bases",baseRepo.findAll());
@@ -105,24 +106,31 @@ public class WebController {
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
 			Base base = baseRepo.findById(bid).get();
-			model.addAttribute("userName", "Welcome " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
+			model.addAttribute("userName", user.getFullname() + " (" + user.getPersonalId() + ")");
 			model.addAttribute("reports",base.getReports());
 			model.addAttribute("date",base.getD_date());
 			model.addAttribute("baseId",base.getId());
 			model.addAttribute("curentUser",user);
 			model.addAttribute("baseUser",base.getUser());
 			model.addAttribute("allUser",userRepo.findAll());
-			model.addAttribute("states",sRepo.findAll());
+			if(user.getRoles().get(0).getName() == "PROUSER") {
+				model.addAttribute("states",sRepo.findAll());
+			}else {
+				List<State> stateList = sRepo.searchJob(user.getJob());
+				model.addAttribute("states",stateList);
+			}
 	  return "ReportPage";
 	  }
 
 	  @GetMapping("/report")
-	   public String Reports(Model model,String keyword,String from,String to){
+	   public String Reports(Model model,String keyword,String from,String to,String job){
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
 			model.addAttribute("userName", user.getFullname() + " (" + user.getPersonalId() + ")");
+			model.addAttribute("states", sRepo.findAll());
+			model.addAttribute("jobs", jRepo.findAll());
 			int bad = 0;
-			if(keyword==null && from==null && to==null) {
+			if(keyword==null && from==null && to==null && job==null) {
 				List<Report> rp = rRepo.findAll();
 				model.addAttribute("reports",rp);
 				model.addAttribute("total",rp.size());
@@ -136,23 +144,14 @@ public class WebController {
 			}else {
 			if(keyword != "") {
 				if(from !="" && to != "") {
-					if(from.length() != 10) {
-						if(from.charAt(6) == '/') { // modify month
-							from = from.substring(0,5)+"0"+from.substring(5);
-						} 
-						if(from.length() !=10) { // modify day
-							from = from.substring(0,8)+"0"+from.substring(8);	
-						}
-						}
-						if(to.length() != 10) {
-							if(to.charAt(6) == '/') { // modify month
-								to = to.substring(0,5)+"0"+to.substring(5);
-							} 
-							if(to.length() !=10) { // modify day
-								to = to.substring(0,8)+"0"+to.substring(8);			
-							}
-							}
-				List<Report> mrp = 	rRepo.searchMulti(from, to, keyword);
+					from = dateserialaze(from);
+					to = dateserialaze(to);
+					List<Report> mrp = new ArrayList<Report>();
+					if(job != "") {
+						mrp = 	rRepo.searchMultijob(from, to, keyword,job);
+					}else {
+						mrp = 	rRepo.searchMulti(from, to, keyword);
+					}
 				model.addAttribute("reports",mrp);
 				model.addAttribute("total",mrp.size());
 				for(Report r : mrp) {
@@ -162,8 +161,15 @@ public class WebController {
 				}
 				model.addAttribute("bad",bad);
 				model.addAttribute("right",mrp.size() - bad);
+				
 				}else {
-					List<Report> mrp = 	rRepo.searchState(keyword);
+					List<Report> mrp = new ArrayList<Report>();
+					if(job !="") {
+						mrp = 	rRepo.searchJobState(job, keyword);
+					}else {
+						mrp = 	rRepo.searchState(keyword);	
+					}
+					
 					model.addAttribute("reports",mrp);
 					model.addAttribute("total",mrp.size());
 					for(Report r : mrp) {
@@ -176,23 +182,14 @@ public class WebController {
 				}
 	 		}else {
 	 			if(from !="" && to != "") {
-	 				if(from.length() != 10) {
-						if(from.charAt(6) == '/') { // modify month
-							from = from.substring(0,5)+"0"+from.substring(5);
-						} 
-						if(from.length() !=10) { // modify day
-							from = from.substring(0,8)+"0"+from.substring(8);	
-						}
-						}
-						if(to.length() != 10) {
-							if(to.charAt(6) == '/') { // modify month
-								to = to.substring(0,5)+"0"+to.substring(5);
-							} 
-							if(to.length() !=10) { // modify day
-								to = to.substring(0,8)+"0"+to.substring(8);			
-							}
-							}
-					List<Report> mrp = rRepo.search(from, to);
+	 				from = dateserialaze(from);
+	 				to = dateserialaze(to);
+	 				List<Report> mrp = new ArrayList<Report>();
+					if(job !="") {
+						mrp = rRepo.searchjobDate(from, to, job);
+					}else {
+						mrp = rRepo.search(from, to);	
+					}
 					model.addAttribute("reports",mrp);
 					model.addAttribute("total",mrp.size());
 					for(Report r : mrp) {
@@ -204,7 +201,13 @@ public class WebController {
 					model.addAttribute("right",mrp.size() - bad);
 	 				
 	 			}else {
-	 			List<Report> mrp = rRepo.findAll();
+	 				List<Report> mrp = new ArrayList<Report>();
+					if(job !="") {
+						mrp = rRepo.searchJob(job);
+					}else {
+						mrp = rRepo.findAll();	
+					}
+	 			 
 	 			model.addAttribute("reports",mrp);
 				model.addAttribute("total",mrp.size());
 				for(Report r : mrp) {
@@ -228,14 +231,14 @@ public class WebController {
 			model.addAttribute("user",user);
 		  return "userprofile";
 	  }
-	  @GetMapping("/states")
+	   @GetMapping("/states")
 	   public String viewState(Model model){
 	 		
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
-			model.addAttribute("userName", "Welcome " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
+			model.addAttribute("userName", user.getFullname() + " (" + user.getPersonalId() + ")");
 			model.addAttribute("states",sRepo.findAll());
-			
+			model.addAttribute("jobs", jRepo.findAll());
 			
 	  return "states";
 	  }
@@ -244,7 +247,7 @@ public class WebController {
 	   public String access(Model model){
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User user = userService.findByUsername(auth.getName());
-			model.addAttribute("userName", "Welcome " + user.getFName() + " " + user.getLname() + " (" + user.getPersonalId() + ")");
+			model.addAttribute("userName", user.getFullname() + " (" + user.getPersonalId() + ")");
 	 		 
 	 		 return "access-denied";
 	     }
@@ -254,7 +257,10 @@ public class WebController {
 			 
 			 if(u.getFinger().contentEquals("0")) {
 				 userService.save(u,0);
-			 }else {
+			 }else if(u.getFinger().contentEquals("1")) {
+				 userService.save(u, 3);
+			 }
+			 else {
 				 userService.save(u,1);
 			 }
 			
@@ -264,12 +270,19 @@ public class WebController {
 		public String savepro(User u) {
 		  System.out.println( "User profile ======="+u);
 		  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = userService.findByUsername(auth.getName()); 
-			 if(user.getRoles().get(0).getName().contentEquals("ADMIN")) {
-				 userService.save(u,0);
-			 }else {
-				 userService.save(u,1);
-			 }
+			User user = userService.findByUsername(auth.getName());
+			if(!u.getPass().isEmpty()) {
+				user.setPass(u.getPass());
+				if(user.getRoles().get(0).getName().contentEquals("ADMIN")) {
+					 userService.save(user,0);
+				 }else if(user.getRoles().get(0).getName().contentEquals("PROUSER")) {
+					 userService.save(user,3);
+				 }
+				 else {
+					 userService.save(user,1);
+				 }
+			}
+			 
 			
 			return "redirect:/profile";
 		}
@@ -278,11 +291,22 @@ public class WebController {
 				 sRepo.save(s);
 			return "redirect:/states";
 		}
+	  @PostMapping("/saveJobs")
+		public String savejob(Jobs job) { 
+				 jRepo.save(job);
+			return "redirect:/states";
+		}
 	  @GetMapping("/findOneState")
 	  @ResponseBody
 	  	public Optional<State> findOneState(Integer id){
 		  
 		  return sRepo.findById(id);
+	  }
+	  @GetMapping("/findOneJob")
+	  @ResponseBody
+	  	public Optional<Jobs> findOneJob(Integer id){
+		  
+		  return jRepo.findById(id);
 	  }
 		@RequestMapping(value={ "/login"}, method = RequestMethod.GET)
 		public ModelAndView login(){
@@ -394,6 +418,8 @@ public class WebController {
 		}
 		@PostMapping("/saveRportToBase")
 		public String saveToBase(Report r,int baseid) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			User user = userService.findByUsername(auth.getName());
 			Optional<Base> bases = baseRepo.findById(baseid);
 			Roozh jCal = new Roozh();
 			jCal.gregorianToPersian(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
@@ -420,7 +446,17 @@ public class WebController {
 			r.setBase(base);
 			r.setD_time(t);
 			r.setD_date(cal);
-		
+			System.out.println("user role ------->"+ user.getRoles());
+			if(user.getRoles().get(0).getName().contentEquals("PROUSER")) {
+				System.out.println("in the if");
+				User u = userRepo.findBypersonalId(r.getUsername()).get(0);
+				System.out.println(u);
+				r.setUser_job(u.getJob());
+				r.setUsername(u.getFullname());
+			}else {
+				r.setUser_job(user.getJob());
+				r.setUsername(user.getFullname());
+			}
 			rRepo.save(r);
 			System.out.println("report ----->"+r);
 			Boolean b = base.getReports().add(r);
@@ -538,6 +574,16 @@ public class WebController {
 			}
 			return "redirect:/states";
 		}
+		@GetMapping("/deleteJob")
+		public String delj(int id) {
+			try {
+				jRepo.deleteById(id);
+				
+			} catch (Exception e) {
+				return "errorPage";
+			}
+			return "redirect:/states";
+		}
 		@GetMapping("/deleteReport")
 		public String delr(int id,int bid) {
 			try {
@@ -547,6 +593,18 @@ public class WebController {
 				return "errorPage";
 			}
 			return "redirect:/ViewReports/?bid="+bid;
+		}
+		
+		public String dateserialaze(String date) {
+			if(date.length() != 10) {
+				if(date.charAt(6) == '/') { // modify month
+					date = date.substring(0,5)+"0"+date.substring(5);
+				} 
+				if(date.length() !=10) { // modify day
+					date = date.substring(0,8)+"0"+date.substring(8);	
+				}
+				}
+				return date;
 		}
 	}
 

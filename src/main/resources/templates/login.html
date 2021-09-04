@@ -14,12 +14,17 @@
      <link rel="stylesheet" href="css/login-form.css">
         <script src="js/login-form.js"></script>
 </head>
+<style>
+body{
+background: url("../images/wallpapertip_block-wallpaper-hd_756948.jpg");
+}
 
+</style>
 <body>
 
-<div class="container">
-    <img th:src="@{/images/login.jpg}" class="img-responsive center-block" width="300" height="300" alt="Logo"/>
-    <form th:action="@{/login}" method="POST" class="form-signin">
+<div class="container" style="padding-top: 10%;">
+    
+    <form th:action="@{/login}" method="POST" class="form-signin" style="border-radius: 20px 10px 10px 40px;">
         <h3 class="form-signin-heading" th:text="Welcome"></h3>
         <br/>
 

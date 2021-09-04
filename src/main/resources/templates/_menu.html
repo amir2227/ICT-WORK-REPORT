@@ -1,20 +1,23 @@
-<div xmlns:th="http://www.thymeleaf.org">
- 
- 
- 
+<div xmlns:th="http://www.thymeleaf.org" >
+<div class="header"> 
  	
  <ul>
+ 
   <li ><a th:href="@{/ViewBases}">گزارش های من</a></li>
   <li><a th:href="@{/states}" >دسته بندی ها</a></li>
   <li><a th:href="@{/profile}">پروفایل</a></li>
   <li><a th:href="@{/members}">کاربرها</a></li>
   <li><a th:href="@{/report}">گزارش</a></li>
-  <li style="float: left;"><span style="float: left; font-size: 90%;" th:utext="${userName}"></span></li>
-  <li><form th:action="@{/logout}" method="get">
+  <li style="float: left;"></li>
+  <li></li>
+</ul>
+
+<span style="float: left; font-size: 90%; padding-left: 80px; width: 100%; padding-top: 10px;" th:utext="${userName}"></span>
+
+<form th:action="@{/logout}" method="get" style="margin-top: 10px;">
         <button  class="btn btn-md btn-danger btn-block" name="registration"
                 type="Submit">خروج
         </button>
-    </form></li>
-</ul>
-	
+    </form>
+	</div>
 </div>

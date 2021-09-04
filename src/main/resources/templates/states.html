@@ -33,13 +33,15 @@ background-color: #FFFFFF;
    </style>
    
   <body dir="rtl">
-  
- <div class="container">
+ 
     <th:block th:include="/_menu"></th:block>
-     </div>
-    <br><br>
+ <div class="pad"></div>
+  
+ 
     <div class="container" id="con">      
       <h2>دسته بندی ها</h2>
+      <div class="row">
+      <div class="form-group col-sm-6">
        <button class="btn btn-succes stnBtn" id="NState">اضافه کردن دسته بندی جدید</button>
       	 
       <table   class="table table-hover">
@@ -47,6 +49,7 @@ background-color: #FFFFFF;
             <tr style="font-size: 16px; font-weight: bold;">
                
                <td>نام دسته بندی</td>
+               <td>محل خدمت</td>
             </tr>
             </thead>
             <tbody>
@@ -54,7 +57,7 @@ background-color: #FFFFFF;
             <tr th:each ="state : ${states}">
             	
                <td th:utext="${state.name}">...</td>
-               
+               <td th:utext="${state.user_job}">...</td>
 				<td>
 				<a th:href="@{findOneState/(id=${state.id})}" class="btn btn-primary stBtn" id="EditState">ویرایش</a>
 				<a th:href="@{deleteState/(id=${state.id})}" class="btn btn-danger stdelBtn" id="DeleteState">حذف</a>
@@ -64,6 +67,36 @@ background-color: #FFFFFF;
             
             </tbody>
       </table>
+      </div>
+      <div class="form-group col-sm-6">
+       <button class="btn btn-succes njBtn" id="NJob">اضافه کردن محل خدمت جدید</button>
+      	 
+      <table   class="table table-hover">
+      <thead>
+            <tr style="font-size: 16px; font-weight: bold;">
+               
+               <td>ردیف</td>
+               <td>محل خدمت</td>
+            </tr>
+            </thead>
+            <tbody>
+            
+            <tr th:each ="job, s : ${jobs}">
+            	
+               <td th:utext="${s.count}">...</td>
+               <td th:utext="${job.name}">...</td>
+				<td>
+				<a th:href="@{findOneJob/(id=${job.id})}" class="btn btn-primary jBtn" id="EditJob">ویرایش</a>
+				<a th:href="@{deleteJob/(id=${job.id})}" class="btn btn-danger stdelBtn" id="DeleteState">حذف</a>
+				</td>
+				
+            </tr>
+            
+            </tbody>
+      </table>     
+      </div>
+      </div>
+      
       <hr/>
        
            <div class="smyForm">
@@ -84,10 +117,55 @@ background-color: #FFFFFF;
             <label for="id" class="form-control-label">ID:</label>
             <input type="text" class="form-control" id="id" name="id" value="" />
           </div>
+          <label for="job" class="form-control-label">محل خدمت:</label>
+          <select class="form-control" name="user_job">
+          <option th:each="job : ${jobs}" th:value="${job.name}" th:text="${job.name}"></option>
+          <option value="سایر">سایر</option>
+          </select>
           </div>
           
           <div class="form-group col-sm-6">
             <label for="name" class="form-control-label">نام دسته بندی:</label>
+            <input type="text" class="form-control" id="name" name="name" value="" />
+          </div>
+          </div>
+           
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">بیخیال</button>
+        <input type="submit" class="btn btn-primary" value="ذخیره" />
+      </div>
+    </div>
+  </div>
+  	</form>
+</div>
+
+
+<div class="jmyForm">
+	<form th:action="@{/saveJobs}" method="post" >
+	<div class="modal fade" id="jexampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">ویرایش یا ایجاد</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group col-sm-6">
+		  <div  hidden>
+            <label for="id" class="form-control-label">ID:</label>
+            <input type="text" class="form-control" id="id" name="id" value="" />
+          </div>
+          
+          </div>
+          
+          <div class="form-group col-sm-6">
+            <label for="name" class="form-control-label">محل خدمت:</label>
             <input type="text" class="form-control" id="name" name="name" value="" />
           </div>
           </div>

@@ -4,7 +4,7 @@
 
 $(document).ready(function(){
 	
-	$('.mnBtn, .table .meBtn, .table .proBtn, .stnBtn, .table .stBtn, .table .rBtn').on('click',function(event){
+	$('.mnBtn, .table .meBtn, .table .proBtn, .stnBtn, .table .stBtn, .table .rBtn,.table .jBtn, .njBtn').on('click',function(event){
 		event.preventDefault();
 		var href = $(this).attr('href');
 		var text = $(this).attr('id');
@@ -16,6 +16,7 @@ $(document).ready(function(){
 				$('.umyForm #personalId').val(member.personalId);
 				$('.umyForm #FName').val(member.fname);
 				$('.umyForm #Lname').val(member.lname);
+				$('.umyForm #job').val(member.job);
 				
 			});
 			
@@ -28,7 +29,23 @@ $(document).ready(function(){
 				});
 				
 			$('.smyForm #sexampleModal').modal();
-			 }else if(text=='EditRep'){ 
+			 }else if(text=='EditJob'){ 
+					
+					$.get(href,function(state,status){
+						$('.jmyForm #id').val(state.id);
+						$('.jmyForm #name').val(state.name);
+					});
+					
+				$('.jmyForm #jexampleModal').modal();
+				 }else if(text=='NJob'){ 
+						
+						$.get(href,function(state,status){
+							$('.jmyForm #id').val();
+							$('.jmyForm #name').val();
+						});
+						
+					$('.jmyForm #jexampleModal').modal();
+					 }else if(text=='EditRep'){ 
 					
 					$.get(href,function(rep,status){
 						$('.rForm #id').val(rep.id);
@@ -43,6 +60,7 @@ $(document).ready(function(){
 			$('.umyForm #personalId').val('');
 			$('.umyForm #FName').val('');
 			$('.umyForm #Lname').val('');
+			$('.umyForm #job').val('');
 			$('.umyForm #uexampleModal').modal();
 		}else if(text=='NState'){
 			$('.smyForm #id').val('');
@@ -52,7 +70,7 @@ $(document).ready(function(){
 			$.getJSON(href, function(data){
 				var boxes='<table class="table table-hover"><thead><tr><td>Id</td><td>تاریخ</td></tr></thead><tbody id="tbodyt">';
 				for(i in data){
-					  boxes += "<tr><td>"+data[i].id+"</td><td>"+data[i].d_date+"</td>" +
+					  boxes += "<tr><td>"+i+"</td><td>"+data[i].d_date+"</td>" +
 				  		
 				  		"<td><a class=\"btn btn-primary urBtn\" href=\"ViewReports/?bid="+data[i].id+"\" >گزارش</a></td>"+
 				  				"</tr>";

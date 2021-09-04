@@ -8,19 +8,19 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "state")
-public class State {
+@Table(name = "jobs")
+public class Jobs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
 
-    private String user_job;
-
-    public State() {}
     
-    public State(Integer id, String name) {
+
+    public Jobs() {}
+    
+    public Jobs(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -42,13 +42,6 @@ public class State {
 		this.name = name;
 	}
 
-	public String getUser_job() {
-		return user_job;
-	}
-
-	public void setUser_job(String user_job) {
-		this.user_job = user_job;
-	}
 
 	@Override
 	public String toString() {

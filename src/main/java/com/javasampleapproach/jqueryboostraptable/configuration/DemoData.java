@@ -20,6 +20,7 @@ public class DemoData {
 	    public void appReady(ApplicationReadyEvent event) {
 		 roleRepo.save(new Role(1L, "ADMIN"));
 		 roleRepo.save(new Role(2L, "USER")); 
+		 roleRepo.save(new Role(3L, "PROUSER"));
 		 
 	    }
 	

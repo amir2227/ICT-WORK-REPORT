@@ -20,7 +20,7 @@
          color: blue;
       }
             body {
-	background-color: #001a33; 
+	background: url("../images/wallpapertip_block-wallpaper-hd_756948.jpg"); 
 }
 #con {
 background-color: #FFFFFF;
@@ -29,13 +29,62 @@ background-color: #FFFFFF;
  
 <body dir="rtl">
 
- <div class="container">
+ 
     <th:block th:include="/_menu"></th:block>
-     </div>
-    <br><br>
-    <div class="container" id="con">      
+ <div class="pad"></div>
+ 
+    <div class="container" id="con" >      
       <h2>گزارش [[${date}]]</h2> <h4 dir="ltr">[[${baseUser.fullname}]] </h4>
      	 <hr>
+     	 <th:block th:if="${curentUser.personalId} == ${baseUser.personalId}">
+      <div dir="rtl">
+      <form th:action="@{/saveRportToBase/(baseid=${baseId})}" method="post">
+      
+          <div class="row">
+          <div class="form-group col-sm-2">
+          <input type="submit" class="btn btn-primary" value="ثبت">
+          </div>
+          <div class="form-group col-sm-2">
+          <div class="form-check">
+          <input type="checkbox" id="is_complete" class="btn-check" name="is_complete" >
+          <label for="is_complete" class="btn btn-outline-primary"> انجام شد</label>
+          </div>
+          </div>
+          <div class="form-group col-sm-4">
+          <textarea rows="4" cols="6" class="form-control" name="description" placeholder="توضیحات" required></textarea>
+          </div>
+          
+          <div class="form-group col-sm-2">
+          <select class="form-control" name="type" placeholder="نوع مراجعه" required>
+          <option value="تلفنی">تلفنی</option>
+          <option value="حضوری">حضوری</option>
+          </select>
+          </div>
+          <th:block th:if="${curentUser.roles[0].name == 'PROUSER'}" >
+          <div class="form-group col-sm-2">
+          <select class="form-control" name="username">
+          <option th:each="us : ${allUser}" th:value="${us.personalId}" th:text="${us.fullname}"></option>
+          <option value="سایر">سایر</option>
+          </select>
+          </div>
+          </th:block>
+			<div class="form-group col-sm-2">
+          <select class="form-control" name="state">
+          <option th:each="state : ${states}" th:value="${state.name}" th:text="${state.name}"></option>
+          <option value="سایر">سایر</option>
+          </select>
+          </div>
+          <div class="form-group col-sm-2">
+          <input type="text" class="form-control" name="location" placeholder="بخش" required>
+          </div>
+          <div class="form-group col-sm-2">
+          <input type="text" class="form-control" name="client" placeholder="مراجعه کننده" required>
+          </div>          
+          </div>
+      </form>
+      </div>
+      </th:block>
+      <hr>
       <table class="table table-hover">
       <thead>
             <tr style="font-size: 16px;font-weight: bold;">
@@ -60,12 +109,21 @@ background-color: #FFFFFF;
                <td th:utext="${report.type}">...</td>
                <td th:utext="${report.username}">...</td>
                <td th:utext="${report.description}" width="120px">...</td>
-               
+               <th:block th:if="${curentUser.personalId} == ${baseUser.personalId}">
                <th:block th:if="${report.is_complete}">
                <td><a th:href="@{../uncheckstatus/(id=${report.id},bid=${baseId})}"><span style="color: green; font-size: 30px">&#10003;</span></a></td>
                </th:block>
                <th:block th:if="${report.is_complete} == null">
                <td><a th:href="@{../changestatus/(id=${report.id},bid=${baseId})}"><span style="color: red; font-size: 30px">&#10008;</span></a></td>
+               </th:block>
+               </th:block>
+               <th:block th:if="${curentUser.personalId} != ${baseUser.personalId}">
+               <th:block th:if="${report.is_complete}">
+               <td><span style="color: green; font-size: 30px">&#10003;</span></td>
+               </th:block>
+               <th:block th:if="${report.is_complete} == null">
+               <td><span style="color: red; font-size: 30px">&#10008;</span></td>
+               </th:block>
                </th:block>
                <td th:utext="${report.d_time}">...</td>
 			   <th:block th:if="${curentUser.personalId} == ${baseUser.personalId}">
@@ -79,52 +137,8 @@ background-color: #FFFFFF;
             
             </tbody>
       </table>
-      <th:block th:if="${curentUser.personalId} == ${baseUser.personalId}">
-      <div dir="rtl">
-      <form th:action="@{/saveRportToBase/(baseid=${baseId})}" method="post">
       
-          <div class="row">
-          <div class="form-group col-sm-1">
-          <input type="submit" class="btn btn-primary" value="ثبت">
-          </div>
-          <div class="form-group col-sm-1">
-          <div class="form-check">
-          <input type="checkbox" id="is_complete" class="btn-check" name="is_complete" >
-          <label for="is_complete" class="btn btn-outline-primary"> انجام شد</label>
-          </div>
-          </div>
-          <div class="form-group col-sm-3">
-          <textarea rows="4" cols="6" class="form-control" name="description" placeholder="توضیحات" required></textarea>
-          </div>
-          <div class="form-group col-sm-3">
-          <input type="text" class="form-control" name="client" placeholder="مراجعه کننده" required>
-          </div>
-          <div class="form-group col-sm-2">
-          <select class="form-control" name="type" placeholder="نوع مراجعه" required>
-          <option value="تلفنی">تلفنی</option>
-          <option value="حضوری">حضوری</option>
-          </select>
-          </div>
-          <div class="form-group col-sm-2">
-          <select class="form-control" name="username">
-          <option th:each="us : ${allUser}" th:value="${us.fullname}" th:text="${us.fullname}"></option>
-          <option value="سایر">سایر</option>
-          </select>
-          </div>
-			<div class="form-group col-sm-2">
-          <select class="form-control" name="state">
-          <option th:each="state : ${states}" th:value="${state.name}" th:text="${state.name}"></option>
-          <option value="سایر">سایر</option>
-          </select>
-          </div>
-          <div class="form-group col-sm-3">
-          <input type="text" class="form-control" name="location" placeholder="بخش" required>
-          </div>          
-          </div>
-      </form>
-      </div>
-      </th:block>
-      <hr/>
+      
 
 
            <div class="rForm">

@@ -42,6 +42,7 @@ public class User implements Serializable {
 	@JsonIgnore
 	private String pass;
 	
+	private String job;
 
 	@Column(name = "ACTIVE")
 	private int active;
@@ -80,6 +81,15 @@ public class User implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+
+	public String getJob() {
+		return job;
+	}
+
+	public void setJob(String job) {
+		this.job = job;
 	}
 
 	public String getPersonalId() {

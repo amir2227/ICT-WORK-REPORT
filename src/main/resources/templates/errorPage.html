@@ -16,34 +16,24 @@
 	  <script type="text/javascript" th:src="@{../js/get.js}" src="../static/js/get.js"></script>
 	  <script type="text/javascript" th:src="@{../js/jqueryAjaxGet.js}" src="../static/js/jqueryAjaxGet.js"></script>
 	  <link rel="stylesheet" type="text/css" th:href="@{../css/style.css}" />
-	  <script>
-$(document).ready(function(){
-  $("button").click(function(){
-    $.getJSON("http://172.105.5.93/api/v0/GDP?field=usd", function(data,status){
-	var mainContainer = document.getElementById("myData");
-		for (var i = 0; i < data.length; i++) {
-                var div = document.createElement("div");
-                div.innerHTML = 'Name: ' + data[i].usd + ' ' + data[i].d_date;
-                mainContainer.appendChild(div);
-            }
-      alert("Data: " + data + "\nStatus: " + status);
-    });
-  });
-});
-</script>
+
 </head>
 
   <body dir="rtl">
+  
+    <th:block th:include="/_menu"></th:block>
+ <div class="pad"></div>
+ 
     <div class="container">
       <!-- Include _menu.html -->
-      <th:block th:include="/_menu"></th:block>  
+   
        
       <h1 style="float: left" >Error</h1>
        
     <h2>[[${messege}]]</h2>
        
-			<button>Send an HTTP GET request to a page and get the result back</button>
+
 			</div>
-			<div id="myData"></div>
+
    </body>
 </html>

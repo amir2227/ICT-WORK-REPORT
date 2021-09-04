@@ -40,6 +40,8 @@ public class UserServiceImp implements UserService {
         user.setFullname(user.getFName() + " "+ user.getLname());
         if(e==0) {
         user.setRoles(roleRepository.findByname("ADMIN"));
+        }else if(e==3){
+        	user.setRoles(roleRepository.findByname("PROUSER"));
         }else {
         user.setRoles(roleRepository.findByname("USER"));
         }
